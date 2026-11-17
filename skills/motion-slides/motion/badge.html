@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- Rotating text ring around a static numeral. Small moving area: cheap GIF.
+     Suggested render: --fps 12 --width 360. Place top-right on a title slide. -->
+<html lang="en" data-composition-variables='[
+  {"id":"bg","type":"color","label":"Ground (must equal the slide background)","default":"#2F4B2B"},
+  {"id":"ink","type":"color","label":"Ink","default":"#EBA6BD"},
+  {"id":"label_font","type":"string","label":"Ring font","default":"DM Mono"},
+  {"id":"display_font","type":"string","label":"Center font","default":"Instrument Serif"},
+  {"id":"ring_text","type":"string","label":"Ring text (about 40 chars, end with a separator)","default":"NATIVE MOTION ✦ GOOGLE SLIDES ✦ RENDERED LOOP ✦"},
+  {"id":"core_text","type":"string","label":"Center text (1-3 chars)","default":"01"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=480, height=480" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 480px; height: 480px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 480px; height: 480px; background: var(--bg); }
+      #ring { position: absolute; inset: 0; transform-origin: 240px 240px; }
+      #ring text { font-family: var(--label_font); font-weight: 500; font-size: 27px; fill: var(--ink); }
+      #core { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      #core span { font-family: var(--display_font); font-size: 120px; color: var(--ink); line-height: 1; }
+      #rule { position: absolute; left: 140px; top: 140px; width: 200px; height: 200px; border: 2px solid var(--ink); border-radius: 50%; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="480" data-height="480">
+      <svg id="ring" class="clip" data-start="0" data-duration="12" data-track-index="0" width="480" height="480" viewBox="0 0 480 480">
+        <defs><path id="circ" d="M 240,240 m -196,0 a 196,196 0 1,1 392,0 a 196,196 0 1,1 -392,0" /></defs>
+        <text><textPath id="ringtext" href="#circ" startOffset="0" textLength="1226" lengthAdjust="spacing"></textPath></text>
+      </svg>
+      <div id="rule" class="clip" data-start="0" data-duration="12" data-track-index="1"></div>
+      <div id="core" class="clip" data-start="0" data-duration="12" data-track-index="2"><span id="coretext"></span></div>
+    </div>
+    <script>
+      const v = window.__hyperframes.getVariables();
+      for (const [k, val] of Object.entries(v)) document.documentElement.style.setProperty("--" + k, val);
+      document.getElementById("ringtext").textContent = v.ring_text;
+      document.getElementById("coretext").textContent = v.core_text;
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#ring", { rotation: 0 }, { rotation: 360, duration: 12, ease: "none" }, 0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

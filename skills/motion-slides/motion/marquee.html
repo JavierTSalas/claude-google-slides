@@ -1,0 +1,51 @@
+<!doctype html>
+<!-- Poster ticker: one band of heavy caps slides left, seamless. Kinetic-poster accent strip.
+     Suggested render: --fps 12 --width 1280. Place full width, rotated -4..6 deg, over color blocks. -->
+<html lang="en" data-composition-variables='[
+  {"id":"bg","type":"color","label":"Band color (match a native block or the slide)","default":"#141414"},
+  {"id":"ink","type":"color","label":"Text","default":"#FFD23F"},
+  {"id":"display_font","type":"string","label":"Condensed caps font","default":"Anton"},
+  {"id":"text","type":"string","label":"Phrase (short, caps; separator added)","default":"DECKS THAT MOVE"},
+  {"id":"sep","type":"string","label":"Separator","default":"✦"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=128" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1280px; height: 128px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1280px; height: 128px; background: var(--bg); overflow: hidden; }
+      #track { position: absolute; left: 0; top: 0; height: 128px; display: flex; white-space: nowrap; will-change: transform; }
+      .unit { font-family: var(--display_font); font-size: 92px; line-height: 128px; color: var(--ink);
+              padding-right: 40px; text-transform: uppercase; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1280" data-height="128">
+      <div id="track" class="clip" data-start="0" data-duration="8" data-track-index="0"></div>
+    </div>
+    <script>
+      const v = window.__hyperframes.getVariables();
+      for (const [k, val] of Object.entries(v)) document.documentElement.style.setProperty("--" + k, val);
+      const track = document.getElementById("track");
+      const unit = `${v.text}  ${v.sep}`;
+      for (let i = 0; i < 12; i++) {
+        const s = document.createElement("span");
+        s.className = "unit";
+        s.textContent = unit;
+        track.appendChild(s);
+      }
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      // move exactly two units per loop -> seamless; measured after fonts load
+      const go = () => {
+        const w = track.children[0].getBoundingClientRect().width;
+        tl.clear().fromTo(track, { x: 0 }, { x: -2 * w, duration: 8, ease: "none" }, 0);
+      };
+      go();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+    </script>
+  </body>
+</html>

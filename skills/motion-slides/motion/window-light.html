@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- Window light drifting across an arched "photo": blinds slide one period, a leaf sways. Seamless 10 s loop.
+     Photo-like gradients: render small. Suggested: --fps 8 --width 400 --colors 48 --photo.
+     Place left on a light content slide; the arch replaces a photo crop Slides cannot do via API. -->
+<html lang="en" data-composition-variables='[
+  {"id":"bg","type":"color","label":"Ground around the arch (must equal the slide background)","default":"#F1EBE1"},
+  {"id":"light","type":"color","label":"Highlight","default":"#EFD2AD"},
+  {"id":"mid","type":"color","label":"Mid tone","default":"#E2B07F"},
+  {"id":"deep","type":"color","label":"Low tone","default":"#C98A5C"},
+  {"id":"shadow","type":"color","label":"Shadow tint","default":"#5A2A14"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=528, height=675" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 528px; height: 675px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 528px; height: 675px; background: var(--bg); }
+      #arch {
+        position: absolute; left: 24px; top: 24px; width: 480px; height: 627px;
+        border-radius: 240px 240px 0 0; overflow: hidden;
+        background: linear-gradient(160deg, var(--light) 0%, var(--mid) 55%, var(--deep) 100%);
+      }
+      #blinds {
+        position: absolute; left: -400px; top: -300px; width: 1400px; height: 1400px;
+        background: repeating-linear-gradient(90deg, transparent 0px, transparent 46px,
+          color-mix(in srgb, var(--shadow) 34%, transparent) 58px, color-mix(in srgb, var(--shadow) 34%, transparent) 78px,
+          transparent 90px);
+        filter: blur(6px); transform-origin: 700px 700px;
+      }
+      #leaf { position: absolute; left: 250px; top: 300px; width: 420px; height: 420px; filter: blur(9px);
+              transform-origin: 380px 420px; opacity: 0.42; }
+      #leaf g { fill: var(--shadow); }
+      #glow { position: absolute; inset: 0;
+              background: radial-gradient(ellipse at 30% 25%, rgba(255, 236, 200, 0.55), rgba(255, 236, 200, 0) 60%); }
+      #grain { position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: multiply; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="528" data-height="675">
+      <div id="arch" class="clip" data-start="0" data-duration="10" data-track-index="0">
+        <div id="blinds"></div>
+        <svg id="leaf" viewBox="0 0 420 420">
+          <g>
+            <path d="M380 420 C 300 300, 240 240, 120 200 C 200 260, 260 320, 370 420 Z" />
+            <ellipse cx="160" cy="150" rx="90" ry="34" transform="rotate(-30 160 150)" />
+            <ellipse cx="250" cy="110" rx="80" ry="28" transform="rotate(-70 250 110)" />
+            <ellipse cx="90" cy="260" rx="85" ry="30" transform="rotate(10 90 260)" />
+            <ellipse cx="300" cy="230" rx="70" ry="24" transform="rotate(-50 300 230)" />
+          </g>
+        </svg>
+        <div id="glow"></div>
+        <svg id="grain" width="480" height="627">
+          <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" /><feColorMatrix type="saturate" values="0" /></filter>
+          <rect width="100%" height="100%" filter="url(#n)" />
+        </svg>
+      </div>
+    </div>
+    <script>
+      const v = window.__hyperframes.getVariables();
+      for (const [k, val] of Object.entries(v)) document.documentElement.style.setProperty("--" + k, val);
+      const tl = gsap.timeline({ paused: true });
+      gsap.set("#blinds", { rotation: -32 });
+      // blinds drift exactly one stripe period per loop -> seamless
+      tl.fromTo("#blinds", { x: 0 }, { x: 90 / Math.cos(32 * Math.PI / 180), duration: 10, ease: "none" }, 0);
+      // leaf sway 0 -> 4 -> 0 -> -4 -> 0 -> seamless
+      tl.fromTo("#leaf", { rotation: 0 }, { rotation: 4, duration: 2.5, ease: "sine.out" }, 0)
+        .to("#leaf", { rotation: 0, duration: 2.5, ease: "sine.in" }, 2.5)
+        .to("#leaf", { rotation: -4, duration: 2.5, ease: "sine.out" }, 5)
+        .to("#leaf", { rotation: 0, duration: 2.5, ease: "sine.in" }, 7.5);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
