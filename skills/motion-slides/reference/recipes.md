@@ -8,6 +8,7 @@ Rules for all recipes:
 
 - One idea per slide. Respect each recipe's word budget.
 - Fit text by arithmetic, not hope: line width (in) ≈ characters × size_pt / 72 × k, with k ≈ 0.48 for display serifs, 0.40 for condensed caps (Anton), 0.62 for mono, 0.52 for sans. Keep 0.1 in spare.
+- Positions are tuned for the built-in fonts. A wide display face (Archivo Black, for example) needs smaller sizes in the style's `type` presets. Run `scripts/style_tour.py` on the style and fix every fit warning.
 - Margins: 0.5–0.6 in. Bleed only on purpose (poster blocks, hero loops).
 - Builds: total sequence under about 3 s. First group auto-plays on slide open. Use `click` only for a reveal the speaker controls.
 - A GIF starts playing when the slide opens, not when it builds in. Do not give loops an entrance build.
