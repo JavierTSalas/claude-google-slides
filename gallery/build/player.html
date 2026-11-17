@@ -1,0 +1,224 @@
+<!doctype html>
+<!--
+  Preview player. Replays gallery.pptx scenes with the same build chain, transitions and GIF loops
+  that Google Slides plays. Deterministic: window.seek(ms) draws one frame.
+  Load with ?slides=1,2,3&hold=2000&lastHold=3000&lead=0 (1-based slide numbers).
+-->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;700&family=Archivo+Black&family=DM+Mono&family=Fraunces:ital@0;1&family=Instrument+Sans:wght@400;700&family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #000; overflow: hidden; }
+  #stage { position: relative; width: 1280px; height: 720px; overflow: hidden; }
+  .slide { position: absolute; inset: 0; overflow: hidden; }
+  .el { position: absolute; transform-origin: 50% 50%; }
+  .tb { display: flex; flex-direction: column; }
+  .tb p { margin: 0; white-space: pre-wrap; overflow-wrap: break-word; }
+</style>
+<script src="out/scenes.js"></script>
+<script src="out/gifs.js"></script>
+</head><body>
+<div id="stage"></div>
+<script>
+const W = 1280, H = 720, S = W / 10, PT = S / 72;
+const TRANS = { fade: 800, push: 700 };
+const LEAD = 600; // ms of the previous slide shown before a first transition
+const q = new URLSearchParams(location.search);
+const pick = (q.get("slides") || "1").split(",").map((n) => +n - 1);
+const HOLD = +(q.get("hold") || 2000), LAST_HOLD = +(q.get("lastHold") || HOLD);
+const USE_LEAD = q.get("lead") !== "0"; // lead=0: start on the first slide, skip its transition
+
+const ease = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2); // in-out cubic
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const clamp = (p) => Math.max(0, Math.min(1, p));
+
+// ---------- build schedule (mirrors deckkit._timing_xml) ----------
+function schedule(scene) {
+  let end = 0, groupStart = 0, first = true;
+  const at = {};
+  for (const b of scene.builds) {
+    if (b.mode === "after" || first) groupStart = end;
+    first = false;
+    at[b.id] = { start: groupStart, dur: b.dur, effect: b.effect };
+    end = Math.max(end, groupStart + b.dur);
+  }
+  return { at, total: end };
+}
+
+// ---------- DOM ----------
+const gifFrames = {};
+function loadGif(name) {
+  if (gifFrames[name]) return gifFrames[name];
+  const g = GIFS[name];
+  gifFrames[name] = { fps: g.fps, imgs: Array.from({ length: g.n }, (_, i) => {
+    const im = new Image(); im.src = `out/frames/${name}/${String(i + 1).padStart(4, "0")}.png`; return im; }) };
+  return gifFrames[name];
+}
+
+function star(w, h) {
+  const hf = 1.05146, vf = 1.10557, a = 0.38196, cx = w / 2, cy = (h / 2) * vf, rx = (w / 2) * hf, ry = (h / 2) * vf;
+  const pts = [];
+  for (let i = 0; i < 10; i++) {
+    const ang = (-90 + i * 36) * Math.PI / 180, k = i % 2 ? a : 1;
+    pts.push(`${cx + rx * k * Math.cos(ang)}px ${cy + ry * k * Math.sin(ang)}px`);
+  }
+  return `polygon(${pts.join(",")})`;
+}
+
+function buildSlide(scene) {
+  const root = document.createElement("div");
+  root.className = "slide";
+  root.style.background = "#" + scene.bg;
+  const els = {};
+  for (const e of scene.elements) {
+    let n;
+    const w = e.w * S, h = e.h * S;
+    if (e.type === "text") {
+      n = document.createElement("div");
+      n.className = "el tb";
+      n.style.justifyContent = { t: "flex-start", m: "center", b: "flex-end" }[e.anchor];
+      for (const p of e.paras) {
+        const pe = document.createElement("p");
+        pe.style.textAlign = { l: "left", c: "center", r: "right" }[p.align];
+        for (const r of p.runs) {
+          const s = document.createElement("span");
+          s.textContent = r.t;
+          Object.assign(s.style, { fontFamily: `"${r.font}"`, fontSize: r.size * PT + "px", color: "#" + r.color,
+            fontWeight: r.bold ? 700 : 400, fontStyle: r.italic ? "italic" : "normal" });
+          pe.appendChild(s);
+        }
+        // The paragraph strut must match the run, or CSS grows the line box.
+        const r0 = p.runs[0];
+        Object.assign(pe.style, { fontFamily: `"${r0.font}"`, fontSize: r0.size * PT + "px",
+          fontWeight: r0.bold ? 700 : 400, fontStyle: r0.italic ? "italic" : "normal" });
+        pe.dataset.spacing = p.spacing;
+        n.appendChild(pe);
+      }
+    } else if (e.type === "gif") {
+      n = document.createElement("canvas");
+      n.className = "el";
+      n.width = Math.round(w); n.height = Math.round(h);
+      n._gif = loadGif(e.src.replace(".gif", ""));
+    } else if (e.type === "image") {
+      n = document.createElement("img");
+      n.className = "el";
+      n.src = "../assets/" + e.src;
+    } else {
+      n = document.createElement("div");
+      n.className = "el";
+      n.style.background = "#" + e.fill;
+      if (e.type === "ellipse") n.style.borderRadius = "50%";
+      if (e.type === "star") n.style.clipPath = star(w, h);
+    }
+    Object.assign(n.style, { left: e.x * S + "px", top: e.y * S + "px", width: w + "px", height: h + "px" });
+    n._e = e;
+    els[e.id] = n;
+    root.appendChild(n);
+  }
+  return { root, els, scene, sched: schedule(scene) };
+}
+
+// Line spacing: Slides sets each line to spacing x 1.2 x font size (checked against a Slides PDF export).
+const LINE = +(q.get("line") || 1.2);
+function applyLineHeights(root) {
+  for (const p of root.querySelectorAll("p")) {
+    const size = parseFloat(p.querySelector("span").style.fontSize);
+    p.style.lineHeight = size * LINE * +p.dataset.spacing + "px";
+  }
+}
+
+// ---------- per-frame state ----------
+function drawSlide(sl, buildT, gifT) {
+  for (const id in sl.els) {
+    const n = sl.els[id], e = n._e, b = sl.sched.at[id];
+    let dx = 0, dy = 0, sc = 1, rot = e.rot, op = 1, vis = true;
+    if (b) {
+      const p = clamp((buildT - b.start) / b.dur);
+      const started = buildT >= b.start;
+      if (b.effect === "spin") rot += 360 * ease(p);
+      else if (!started) vis = false;
+      else if (b.effect === "fade") op = p;
+      else if (b.effect === "zoom") sc = easeOut(p);
+      else if (b.effect.startsWith("fly-")) {
+        const k = 1 - ease(p), dir = b.effect.slice(4);
+        if (dir === "bottom") dy = (5.625 - e.y) * S * k;
+        if (dir === "top") dy = -(e.y + e.h) * S * k;
+        if (dir === "left") dx = -(e.x + e.w) * S * k;
+        if (dir === "right") dx = (10 - e.x) * S * k;
+      }
+    }
+    n.style.visibility = vis ? "visible" : "hidden";
+    n.style.opacity = op;
+    n.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${sc})`;
+    if (n._gif) {
+      const g = n._gif, i = Math.floor((gifT / 1000) * g.fps) % g.imgs.length;
+      const ctx = n.getContext("2d");
+      ctx.drawImage(g.imgs[i], 0, 0, n.width, n.height);
+    }
+  }
+}
+
+// ---------- timeline ----------
+const stage = document.getElementById("stage");
+const slides = SCENES.map(buildSlide);
+const segs = [];
+let t = 0;
+pick.forEach((idx, k) => {
+  const sl = slides[idx];
+  const prev = idx > 0 ? slides[idx - 1] : null;
+  const td = sl.scene.transition && prev && (k > 0 || USE_LEAD) ? TRANS[sl.scene.transition] : 0;
+  if (k === 0 && td) { segs.push({ kind: "lead", sl: prev, t0: t, t1: t + LEAD }); t += LEAD; }
+  const hold = k === pick.length - 1 ? LAST_HOLD : HOLD;
+  const t1 = t + td + sl.sched.total + hold;
+  segs.push({ kind: "slide", sl, prev, td, t0: t, t1 });
+  t = t1;
+});
+window.DURATION = t;
+
+function show(...roots) {
+  for (const c of [...stage.children]) if (!roots.includes(c)) stage.removeChild(c);
+  for (const r of roots) if (r.parentNode !== stage) stage.appendChild(r);
+  roots.forEach((r, i) => (r.style.zIndex = i));
+}
+
+window.seek = (ms) => {
+  const s = segs.find((x) => ms < x.t1) || segs[segs.length - 1];
+  const local = ms - s.t0;
+  if (s.kind === "lead") {
+    show(s.sl.root);
+    s.sl.root.style.transform = ""; s.sl.root.style.opacity = 1;
+    drawSlide(s.sl, 1e9, 1e5 + local);
+    return;
+  }
+  const { sl, prev, td } = s;
+  drawSlide(sl, local - td, local);
+  sl.root.style.transform = ""; sl.root.style.opacity = 1;
+  if (td && local < td) {
+    const p = clamp(local / td);
+    drawSlide(prev, 1e9, 1e5 + local);
+    show(prev.root, sl.root);
+    if (sl.scene.transition === "fade") {
+      prev.root.style.transform = ""; prev.root.style.opacity = 1;
+      sl.root.style.opacity = p;
+    } else {
+      const x = Math.round(ease(p) * W); // whole pixels: no hairline seam between the slides
+      prev.root.style.transform = `translateX(${-x}px)`; prev.root.style.opacity = 1;
+      sl.root.style.transform = `translateX(${W - x}px)`;
+    }
+  } else show(sl.root);
+};
+
+// Ready: fonts loaded, GIF frames decoded, line heights measured.
+window.READY = (async () => {
+  for (const sl of slides) stage.appendChild(sl.root);
+  const faces = new Set();
+  for (const sp of document.querySelectorAll(".tb span"))
+    faces.add(`${sp.style.fontStyle} ${sp.style.fontWeight} 40px ${sp.style.fontFamily}`);
+  await Promise.all([...faces].map((f) => document.fonts.load(f)));
+  await document.fonts.ready;
+  for (const sl of slides) applyLineHeights(sl.root);
+  const imgs = Object.values(gifFrames).flatMap((g) => g.imgs).concat([...document.querySelectorAll("img")]);
+  await Promise.all(imgs.map((im) => im.decode().catch(() => {})));
+  seek(0);
+  return true;
+})();
+</script></body></html>
