@@ -71,5 +71,41 @@
     "fonts": ["Instrument Serif", "DM Mono"],
     "palette": ["141210", "EBA6BD", "F1EBE1"],
     "motion": ["Fade transition", "Full-bleed orbit loop (GIF, 0.9 MB)", "Native text fades in on top"]
+  },
+  {
+    "id": "riso-overprint",
+    "group": "reference",
+    "title": "Riso overprint",
+    "role": "Style from a video",
+    "src": "out/ref/riso-overprint/scenes.js",
+    "deck": "reference/riso-overprint.pptx",
+    "slides": [1, 2, 3, 4, 5],
+    "hold": 1200,
+    "lastHold": 2500,
+    "lead": false,
+    "reference": "A 15-second motion film (onetake case \"overlap\"). Frames not copied.",
+    "stylePrompt": "Make a slide style from this 15-second motion film: [link]. Take the palette, type, motion tempo and ornaments. Not the footage.",
+    "prompt": "Make a 5-slide deck for a Thursday-night printmaking club in the riso-overprint style. Title \"print club\". Then one line, one stat, a 3-step night, and end on one huge word.",
+    "fonts": ["Archivo Black", "Archivo", "Space Mono"],
+    "palette": ["F0EADE", "EE3D98", "006EA7", "00207A"],
+    "motion": ["Push transitions", "Words fly in from opposite sides", "Ink-pass loop (GIF, 0.1 MB)"]
+  },
+  {
+    "id": "cobalt-ledger",
+    "group": "reference",
+    "title": "Cobalt ledger",
+    "role": "Style from an HTML deck",
+    "src": "out/ref/cobalt-ledger/scenes.js",
+    "deck": "reference/cobalt-ledger.pptx",
+    "slides": [1, 2, 3, 4, 5],
+    "hold": 1400,
+    "lastHold": 2500,
+    "lead": false,
+    "reference": "An open-source HTML slide template (beautiful-html-templates, \"Cobalt Grid\", MIT).",
+    "stylePrompt": "Make a slide style from this HTML deck: [link]. Take its colors, fonts, rules and fade tempo.",
+    "prompt": "Make a 5-slide year-in-review for a small reading-room library, style cobalt-ledger. One statement, one stat with 8 monthly bars, a 6-item list of what changed, and a closing line.",
+    "fonts": ["Newsreader", "Hanken Grotesk", "DM Mono"],
+    "palette": ["F0EBDE", "1F2BE0", "B4B6E6"],
+    "motion": ["Fade transitions", "Quiet fades, 300-400 ms", "Bars rise one by one", "Stair-scan loop (GIF, 0.04 MB)"]
   }
 ]

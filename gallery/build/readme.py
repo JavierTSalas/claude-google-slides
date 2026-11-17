@@ -3,7 +3,9 @@ import json, os, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-ex = json.load(open(os.path.join(ROOT, "examples.json")))
+allx = json.load(open(os.path.join(ROOT, "examples.json")))
+ex = [e for e in allx if e.get("group") != "reference"]
+ref = [e for e in allx if e.get("group") == "reference"]
 
 
 def loops():
@@ -44,6 +46,28 @@ for e in ex:
 
 **Type** {', '.join(e['fonts'])} · **Palette** {sw}<br>
 **Motion** {'. '.join(e['motion'])}.
+""")
+
+parts.append("""## From a reference
+
+Point Claude at a video, a deck or a site. It measures the palette, type and motion tempo, writes a reusable style, then builds decks in it.
+These two styles come from the motion-slides skill ([PR #3](https://github.com/JavierTSalas/claude-google-slides/pull/3)). The previews replay their specimen decks.
+""")
+for e in ref:
+    sw = " ".join(f"`#{c}`" for c in e["palette"])
+    parts.append(f"""### {e['title']} · {e['role']}
+
+<img src="previews/{e['id']}.gif" width="640" alt="{e['title']} preview">
+
+**Reference** {e['reference']}
+
+1. Make the style:
+   > {e['stylePrompt']}
+2. Use it:
+   > {e['prompt']}
+
+**Type** {', '.join(e['fonts'])} · **Palette** {sw}<br>
+**Motion** {'. '.join(e['motion'])}. Deck: [`{e['deck']}`]({e['deck']}).
 """)
 
 parts.append(f"""## Bring your own style
@@ -96,6 +120,7 @@ cd gallery/build
 node render_loop.js loops/ripple.html ../assets/ripple.gif 200 12   # one loop: html -> GIF
 python3 build_gallery.py      # ../gallery.pptx and out/scenes.js
 python3 gifs_manifest.py      # GIF frames for the preview player
+python3 pptx_scenes.py ../reference/riso-overprint.pptx out/ref/riso-overprint   # any .pptx -> preview scenes
 node render_preview.js        # ../previews/*.gif and *.mp4
 python3 readme.py             # this file
 ```

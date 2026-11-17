@@ -3,9 +3,23 @@
   Preview player. Replays gallery.pptx scenes with the same build chain, transitions and GIF loops
   that Google Slides plays. Deterministic: window.seek(ms) draws one frame.
   Load with ?slides=1,2,3&hold=2000&lastHold=3000&lead=0 (1-based slide numbers).
+  Any other deck: python3 pptx_scenes.py deck.pptx out/ref/<name>, then add &src=out/ref/<name>/scenes.js.
 -->
 <html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;700&family=Archivo+Black&family=DM+Mono&family=Fraunces:ital@0;1&family=Instrument+Sans:wght@400;700&family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet">
+<script>
+  // Load every Google Font family the scenes use, at the weights and styles they use.
+  const SRC = new URLSearchParams(location.search).get("src");
+  document.write(`<script src="${SRC || "out/scenes.js"}"><\/script>` + (SRC ? "" : '<script src="out/gifs.js"><\/script>'));
+</script>
+<script>
+  const fam = {};
+  for (const sc of SCENES) for (const e of sc.elements) for (const p of e.paras || []) for (const r of p.runs) {
+    const k = (fam[r.font] ||= new Set()); k.add(`${r.italic ? 1 : 0},${r.bold ? 700 : 400}`);
+  }
+  // One request per family: a style the family lacks fails only that request.
+  for (const [f, v] of Object.entries(fam))
+    document.write(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=${f.replace(/ /g, "+")}:ital,wght@${[...v].sort().join(";")}&display=block">`);
+</script>
 <style>
   html, body { margin: 0; background: #000; overflow: hidden; }
   #stage { position: relative; width: 1280px; height: 720px; overflow: hidden; }
@@ -14,8 +28,6 @@
   .tb { display: flex; flex-direction: column; }
   .tb p { margin: 0; white-space: pre-wrap; overflow-wrap: break-word; }
 </style>
-<script src="out/scenes.js"></script>
-<script src="out/gifs.js"></script>
 </head><body>
 <div id="stage"></div>
 <script>
@@ -36,7 +48,8 @@ function schedule(scene) {
   let end = 0, groupStart = 0, first = true;
   const at = {};
   for (const b of scene.builds) {
-    if (b.mode === "after" || first) groupStart = end;
+    if (b.start !== undefined) groupStart = b.start; // read from a .pptx: exact start times
+    else if (b.mode === "after" || first) groupStart = end;
     first = false;
     at[b.id] = { start: groupStart, dur: b.dur, effect: b.effect };
     end = Math.max(end, groupStart + b.dur);
@@ -48,9 +61,9 @@ function schedule(scene) {
 const gifFrames = {};
 function loadGif(name) {
   if (gifFrames[name]) return gifFrames[name];
-  const g = GIFS[name];
+  const g = GIFS[name], dir = g.dir || `out/frames/${name}`;
   gifFrames[name] = { fps: g.fps, imgs: Array.from({ length: g.n }, (_, i) => {
-    const im = new Image(); im.src = `out/frames/${name}/${String(i + 1).padStart(4, "0")}.png`; return im; }) };
+    const im = new Image(); im.src = `${dir}/${String(i + 1).padStart(4, "0")}.png`; return im; }) };
   return gifFrames[name];
 }
 
@@ -72,9 +85,28 @@ function buildSlide(scene) {
   for (const e of scene.elements) {
     let n;
     const w = e.w * S, h = e.h * S;
-    if (e.type === "text") {
+    if (e.type === "gif") {
+      n = document.createElement("canvas");
+      n.className = "el";
+      n.width = Math.round(w); n.height = Math.round(h);
+      n._gif = loadGif(e.gif || e.src.replace(".gif", ""));
+    } else if (e.type === "image") {
+      n = document.createElement("img");
+      n.className = "el";
+      n.src = e.src.includes("/") ? e.src : "../assets/" + e.src;
+    } else {
       n = document.createElement("div");
-      n.className = "el tb";
+      n.className = "el";
+      if (e.fill) n.style.background = "#" + e.fill;
+      if (e.type === "ellipse") n.style.borderRadius = "50%";
+      if (e.radius) n.style.borderRadius = e.radius * S + "px";
+      if (e.type === "star") n.style.clipPath = star(w, h);
+      if (e.line) n.style.boxShadow = `inset 0 0 0 ${Math.max(1, e.line.w * S)}px #${e.line.color}`;
+    }
+    if (e.paras) {
+      n.classList.add("tb");
+      n.style.boxSizing = "border-box";
+      if (e.inset) n.style.padding = e.inset.map((v, i) => [e.inset[1], e.inset[2], e.inset[3], e.inset[0]][i] * S + "px").join(" ");
       n.style.justifyContent = { t: "flex-start", m: "center", b: "flex-end" }[e.anchor];
       for (const p of e.paras) {
         const pe = document.createElement("p");
@@ -83,7 +115,7 @@ function buildSlide(scene) {
           const s = document.createElement("span");
           s.textContent = r.t;
           Object.assign(s.style, { fontFamily: `"${r.font}"`, fontSize: r.size * PT + "px", color: "#" + r.color,
-            fontWeight: r.bold ? 700 : 400, fontStyle: r.italic ? "italic" : "normal" });
+            fontWeight: r.bold ? 700 : 400, fontStyle: r.italic ? "italic" : "normal", letterSpacing: (r.spc || 0) * PT + "px" });
           pe.appendChild(s);
         }
         // The paragraph strut must match the run, or CSS grows the line box.
@@ -93,21 +125,6 @@ function buildSlide(scene) {
         pe.dataset.spacing = p.spacing;
         n.appendChild(pe);
       }
-    } else if (e.type === "gif") {
-      n = document.createElement("canvas");
-      n.className = "el";
-      n.width = Math.round(w); n.height = Math.round(h);
-      n._gif = loadGif(e.src.replace(".gif", ""));
-    } else if (e.type === "image") {
-      n = document.createElement("img");
-      n.className = "el";
-      n.src = "../assets/" + e.src;
-    } else {
-      n = document.createElement("div");
-      n.className = "el";
-      n.style.background = "#" + e.fill;
-      if (e.type === "ellipse") n.style.borderRadius = "50%";
-      if (e.type === "star") n.style.clipPath = star(w, h);
     }
     Object.assign(n.style, { left: e.x * S + "px", top: e.y * S + "px", width: w + "px", height: h + "px" });
     n._e = e;

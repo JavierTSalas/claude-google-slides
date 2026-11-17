@@ -61,10 +61,11 @@ async function render(browser, id, query) {
     const only = args[0];
     for (const ex of examples) {
       if (only && only !== ex.id) continue;
-      await render(browser, ex.id, `slides=${ex.slides.join(",")}&hold=${ex.hold}&lastHold=${ex.lastHold || ex.hold}&lead=${ex.lead ? 1 : 0}`);
+      const src = ex.src ? `&src=${ex.src}` : "";
+      await render(browser, ex.id, `slides=${ex.slides.join(",")}&hold=${ex.hold}&lastHold=${ex.lastHold || ex.hold}&lead=${ex.lead ? 1 : 0}${src}`);
     }
     if (!only || only === "reel") {
-      const all = examples.flatMap((e) => e.slides);
+      const all = examples.filter((e) => !e.src).flatMap((e) => e.slides);
       await render(browser, "reel", `slides=${all.join(",")}&hold=1500&lastHold=3000`);
     }
   }

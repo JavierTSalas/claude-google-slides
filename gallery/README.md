@@ -64,6 +64,39 @@ Motion that Slides cannot do natively is a small looping GIF, rendered from HTML
 **Type** Instrument Serif, DM Mono · **Palette** `#141210` `#EBA6BD` `#F1EBE1`<br>
 **Motion** Fade transition. Full-bleed orbit loop (GIF, 0.9 MB). Native text fades in on top.
 
+## From a reference
+
+Point Claude at a video, a deck or a site. It measures the palette, type and motion tempo, writes a reusable style, then builds decks in it.
+These two styles come from the motion-slides skill ([PR #3](https://github.com/JavierTSalas/claude-google-slides/pull/3)). The previews replay their specimen decks.
+
+### Riso overprint · Style from a video
+
+<img src="previews/riso-overprint.gif" width="640" alt="Riso overprint preview">
+
+**Reference** A 15-second motion film (onetake case "overlap"). Frames not copied.
+
+1. Make the style:
+   > Make a slide style from this 15-second motion film: [link]. Take the palette, type, motion tempo and ornaments. Not the footage.
+2. Use it:
+   > Make a 5-slide deck for a Thursday-night printmaking club in the riso-overprint style. Title "print club". Then one line, one stat, a 3-step night, and end on one huge word.
+
+**Type** Archivo Black, Archivo, Space Mono · **Palette** `#F0EADE` `#EE3D98` `#006EA7` `#00207A`<br>
+**Motion** Push transitions. Words fly in from opposite sides. Ink-pass loop (GIF, 0.1 MB). Deck: [`reference/riso-overprint.pptx`](reference/riso-overprint.pptx).
+
+### Cobalt ledger · Style from an HTML deck
+
+<img src="previews/cobalt-ledger.gif" width="640" alt="Cobalt ledger preview">
+
+**Reference** An open-source HTML slide template (beautiful-html-templates, "Cobalt Grid", MIT).
+
+1. Make the style:
+   > Make a slide style from this HTML deck: [link]. Take its colors, fonts, rules and fade tempo.
+2. Use it:
+   > Make a 5-slide year-in-review for a small reading-room library, style cobalt-ledger. One statement, one stat with 8 monthly bars, a 6-item list of what changed, and a closing line.
+
+**Type** Newsreader, Hanken Grotesk, DM Mono · **Palette** `#F0EBDE` `#1F2BE0` `#B4B6E6`<br>
+**Motion** Fade transitions. Quiet fades, 300-400 ms. Bars rise one by one. Stair-scan loop (GIF, 0.04 MB). Deck: [`reference/cobalt-ledger.pptx`](reference/cobalt-ledger.pptx).
+
 ## Bring your own style
 
 Fill in the brackets. Keep one idea per slide.
@@ -117,6 +150,7 @@ cd gallery/build
 node render_loop.js loops/ripple.html ../assets/ripple.gif 200 12   # one loop: html -> GIF
 python3 build_gallery.py      # ../gallery.pptx and out/scenes.js
 python3 gifs_manifest.py      # GIF frames for the preview player
+python3 pptx_scenes.py ../reference/riso-overprint.pptx out/ref/riso-overprint   # any .pptx -> preview scenes
 node render_preview.js        # ../previews/*.gif and *.mp4
 python3 readme.py             # this file
 ```
