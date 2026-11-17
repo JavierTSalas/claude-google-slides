@@ -211,6 +211,8 @@ Design tactics that hide Slides' limits:
 - Generate the whole deck as `.pptx` with OOXML animations and GIFs. Convert in Drive.
 - Trade-offs: one pipeline, native builds in one shot. Less control after import. Layout rescale. Charts become images. Every change means a re-import.
 
+**Decision (2026-11-17): A, native-first hybrid, chosen by the project owner.**
+
 **Recommendation: A.** It keeps decks editable through the API and gets the "wow" from rendered motion. PPTX stays a tool for injecting animations, not the main format.
 
 ### Next experiments (before building)
