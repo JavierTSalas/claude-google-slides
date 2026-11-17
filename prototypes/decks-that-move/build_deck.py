@@ -182,12 +182,10 @@ A = lambda n: f"{ASSETS}/{n}"
 # ===== Slide 1: title (style #3) =====
 s = prs.slides.add_slide(BLANK)
 bg(s, GREEN)
-text(s, 0.6, 0.55, 5.5, 0.3, ["A PROTOTYPE  ·  CLAUDE × GOOGLE SLIDES"], MONO, 10, PINK)
 pic(s, A("badge.gif"), 7.9, 0.32, w=1.55)
 l1 = text(s, 0.52, 0.95, 7.0, 1.35, ["Decks"], SERIF, 104, PINK, spacing=0.9)
 l2 = text(s, 0.52, 2.12, 7.0, 1.35, ["that"], SERIF, 104, PINK, spacing=0.9)
 l3 = text(s, 0.52, 3.29, 7.0, 1.35, ["move."], SERIF, 104, PINK, italic=True, spacing=0.9)
-text(s, 0.6, 5.08, 5.0, 0.25, ["NATIVE GOOGLE SLIDES + RENDERED MOTION"], MONO, 9, PINK)
 text(s, 6.4, 5.08, 3.0, 0.25, ["NOV 2026"], MONO, 9, PINK, align=PP_ALIGN.RIGHT)
 builds(s, [(l1, "fade", "after", 600), (l2, "fade", "after", 600), (l3, "fly-bottom", "after", 700)])
 
