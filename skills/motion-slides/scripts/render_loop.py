@@ -170,6 +170,10 @@ def main():
         ground = "#%02X%02X%02X" % px
         print(f"saved {out}: {w}x{h}, {n} frames @ {a.fps} fps, {out.stat().st_size / 1e6:.2f} MB")
         print(f"corner pixel {ground}: set the slide/box behind the GIF to exactly this color")
+        want = str(merged.get("bg") or "").upper()
+        if want.startswith("#") and len(want) == 7 and want != ground:
+            print(f"warn: corner is {ground} but bg is {want}. Give #root (or a full-bleed child) "
+                  f"'background: var(--bg)'; without it frames render on black")
         if out.stat().st_size > 1.6e6:
             print("warn: over the 1.6 MB budget. Shrink the moving area, lower --fps or --width, or use --photo")
     finally:

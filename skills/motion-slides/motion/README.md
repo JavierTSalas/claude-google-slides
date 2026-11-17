@@ -34,6 +34,7 @@ From `docs/research/gif-compression.md` (50 loops ≈ 40 MB per deck):
 Copy the closest template. Keep these rules:
 
 1. Root: `<div id="root" data-composition-id="main" data-start="0" data-duration="N" data-width="W" data-height="H">`.
+   Give `#root` `background: var(--bg)`. Without it, frames render on black. `render_loop.py` warns when the corner pixel is not `bg`.
    Each moving element: `class="clip" data-start="0" data-duration="N" data-track-index="k"`.
 2. Declare variables on `<html data-composition-variables='[{"id", "type", "label", "default"}]'>`.
    Types: `color`, `string`, `number`. Name colors after theme roles (`bg`, `ink`, `accent`...) and fonts `<role>_font`.
