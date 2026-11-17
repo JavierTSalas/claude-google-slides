@@ -10,9 +10,9 @@ Paste this into Claude Code:
 Install the motion-slides skill from https://github.com/JavierTSalas/claude-google-slides on this machine.
 1. Clone the repo (default branch) into ~/code/claude-google-slides. If it exists, git pull.
 2. Link ~/code/claude-google-slides/skills/motion-slides to ~/.claude/skills/motion-slides. On Windows, copy it instead. Replace any old copy.
-3. Install the latest python-pptx: python3 -m pip install -U python-pptx
-4. For motion loops, make sure the latest Node LTS and ffmpeg are on PATH. Install or update them if missing or old.
-5. Optional, for previews: install the latest LibreOffice and poppler (pdftoppm).
+3. Install python-pptx 1.0.2 (known good): python3 -m pip install python-pptx==1.0.2. If that version is unavailable, install whatever version is.
+4. For motion loops, make sure Node (22 LTS or newer) and ffmpeg are on PATH. Install them if missing; any recent version works. The scripts pin HyperFrames 0.9.59, gifsicle 7.0.1 and GSAP 3.15.1, and fall back to whatever is available if a pin can't be fetched.
+5. Optional, for previews: install LibreOffice and poppler (pdftoppm), any recent version.
 6. Test: run python3 ~/.claude/skills/motion-slides/scripts/style_tour.py editorial-forest <temp folder>/motion-tour, then show me <temp folder>/motion-tour/preview/contact-sheet.png. If Node or ffmpeg is missing, add --no-motion.
 Tell me what works and what is still missing.
 ```
@@ -33,9 +33,11 @@ It writes a `.pptx` with native builds, transitions and looping GIFs. Google Dri
 
 | What | Needed for |
 |---|---|
-| `python3 -m pip install -U python-pptx` | Every deck |
-| Latest Node LTS and ffmpeg | Motion loops (latest HyperFrames and gifsicle come through `npx`) |
+| `python3 -m pip install python-pptx==1.0.2` | Every deck |
+| Node 22+ and ffmpeg | Motion loops (pinned HyperFrames and gifsicle come through `npx`) |
 | LibreOffice and poppler | Optional static preview |
+
+Versions are pinned to a tested set, with fallback to whatever is available. See [SKILL.md](skills/motion-slides/SKILL.md#setup-once).
 
 **Try it**
 

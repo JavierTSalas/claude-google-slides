@@ -7,7 +7,7 @@ Native output: text, shapes, images (animated GIFs keep every frame),
 builds (fade, fly, zoom, spin) and slide transitions (fade, push, flip, gallery).
 Google Drive converts the .pptx to Google Slides on import and keeps all of these.
 
-Needs: pip install python-pptx   (brings lxml and Pillow)
+Needs: python-pptx (tested 1.0.2; brings lxml and Pillow). Other versions usually work
 Optional for --preview: LibreOffice (soffice) and poppler (pdftoppm).
 Spec: ../reference/deck-spec.md
 """
@@ -22,6 +22,7 @@ import tempfile
 from itertools import count
 from pathlib import Path
 
+import pptx
 from lxml import etree
 from pptx import Presentation
 from pptx.dml.color import RGBColor
@@ -34,6 +35,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gfonts  # noqa: E402
 
 W_IN, H_IN = 10.0, 5.625  # Google Slides default 16:9 page
+PPTX_TESTED = "1.0.2"  # known-good python-pptx; other versions usually work
 NS_P = "http://schemas.openxmlformats.org/presentationml/2006/main"
 NS_MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 NS_P14 = "http://schemas.microsoft.com/office/powerpoint/2010/main"
@@ -540,6 +542,9 @@ def build(spec_path, out_path):
     print("fonts:", ", ".join(sorted(theme.used_fonts)))
     for w in WARN:
         print("warn:", w)
+    if pptx.__version__ != PPTX_TESTED:
+        print(f"note: python-pptx {pptx.__version__}; tested with {PPTX_TESTED}. "
+              f"If something looks off: python3 -m pip install python-pptx=={PPTX_TESTED}")
     return theme
 
 

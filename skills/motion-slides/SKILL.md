@@ -20,11 +20,22 @@ The Slides API cannot set animations or transitions. A `.pptx` import can, so th
 
 | Need | For | Install |
 |---|---|---|
-| Python 3 (latest) and `python-pptx` | Every deck | `python3 -m pip install -U python-pptx` |
-| Node (latest LTS) and `ffmpeg` (latest) | Motion loops only | `npx` fetches the latest HyperFrames and gifsicle on first use |
-| LibreOffice and poppler (latest) | `--preview` contact sheet only | `soffice`, `pdftoppm` |
+| Python 3 and `python-pptx` | Every deck | `python3 -m pip install python-pptx==1.0.2` (any version if that fails) |
+| Node 22+ and `ffmpeg` | Motion loops only | `npx` fetches HyperFrames and gifsicle on first use |
+| LibreOffice and poppler | `--preview` contact sheet only | `soffice`, `pdftoppm` |
 
 No Google Cloud project and no API keys. Fonts download from Google Fonts on first use.
+
+Known-good set (tested together). The scripts use these pins by default. If a pin cannot be fetched (offline, locked-down registry, older local install), they fall back to whatever version is available, print a `note:`, and keep working.
+
+| Tool | Pinned | Tested with | Override |
+|---|---|---|---|
+| python-pptx | 1.0.2 | Pillow 12.3, lxml 6.1, Python 3.13 | install another version |
+| HyperFrames (npm) | 0.9.59 | Node 22 LTS, Chromium from HyperFrames | `HYPERFRAMES_VERSION` |
+| gifsicle (npm wrapper) | 7.0.1 (gifsicle 1.92) | | `GIFSICLE_VERSION` |
+| GSAP | 3.15.1 | | template URL or `GSAP_VERSION` |
+| ffmpeg | any recent | 6.1 | |
+| LibreOffice, poppler | any recent | 24.2, 24.02 | |
 
 ## Workflow
 
