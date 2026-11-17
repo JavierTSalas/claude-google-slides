@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- Planets orbit a still system of rings. Only the dots move: about 0.4 MB at 1024 px, 15 fps.
+     Suggested render: --fps 15 --width 1024. Full-bleed hero, offset right; native text on the left. -->
+<html lang="en" data-composition-variables='[
+  {"id":"bg","type":"color","label":"Ground (must equal the slide background)","default":"#2F4B2B"},
+  {"id":"ink","type":"color","label":"Rings and main planets","default":"#EBA6BD"},
+  {"id":"accent","type":"color","label":"Small planets","default":"#F1EBE1"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1280px; height: 720px; background: var(--bg); }
+      svg { position: absolute; inset: 0; }
+      .ring { fill: none; stroke: var(--ink); stroke-width: 2; }
+      .dash { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 2 14; stroke-linecap: round; }
+      .ink { fill: var(--ink); }
+      .acc { fill: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1280" data-height="720">
+      <svg class="clip" data-start="0" data-duration="12" data-track-index="0" width="1280" height="720" viewBox="0 0 1280 720">
+        <circle class="ring" cx="930" cy="360" r="132" />
+        <circle class="ring" cx="930" cy="360" r="214" />
+        <circle class="ring" cx="930" cy="360" r="296" />
+        <circle class="ring" cx="930" cy="360" r="400" />
+        <circle class="dash" cx="930" cy="360" r="252" />
+        <circle class="ink" cx="930" cy="360" r="54" />
+        <g id="o1"><circle class="acc" cx="1062" cy="360" r="11" /></g>
+        <g id="o2"><circle class="ink" cx="716" cy="360" r="20" /><circle class="ring" cx="716" cy="360" r="34" /></g>
+        <g id="o3"><circle class="ink" cx="930" cy="656" r="8" /></g>
+        <g id="o4"><circle class="acc" cx="930" cy="-40" r="26" /></g>
+      </svg>
+    </div>
+    <script>
+      const v = window.__hyperframes.getVariables();
+      for (const [k, val] of Object.entries(v)) document.documentElement.style.setProperty("--" + k, val);
+      const tl = gsap.timeline({ paused: true });
+      const c = { svgOrigin: "930 360", ease: "none", duration: 12 };
+      tl.fromTo("#o1", { rotation: 0 }, { ...c, rotation: 720 }, 0);
+      tl.fromTo("#o2", { rotation: 0 }, { ...c, rotation: -360 }, 0);
+      tl.fromTo("#o3", { rotation: 0 }, { ...c, rotation: 360 }, 0);
+      tl.fromTo("#o4", { rotation: 0 }, { ...c, rotation: 360 }, 0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

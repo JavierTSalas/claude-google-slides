@@ -1,0 +1,95 @@
+{
+  "title": "Decks that move",
+  "assets": "assets",
+  "theme": {
+    "colors": {
+      "bg": "#2F4B2B", "ink": "#EBA6BD", "cream": "#F1EBE1",
+      "paper": "#F1EBE1", "text": "#1E1A16", "muted": "#4A4038", "accent": "#B5462B",
+      "yellow": "#FFD23F", "pink": "#FF3D7F", "blue": "#2B3BFF", "black": "#141414", "white": "#FFFFFF"
+    },
+    "fonts": { "display": "Instrument Serif", "body": "Instrument Sans", "label": "DM Mono", "poster": "Anton" },
+    "type": {
+      "title":    { "font": "display", "size": 104, "color": "ink", "spacing": 0.9 },
+      "label":    { "font": "label", "size": 9, "color": "ink" },
+      "headline": { "font": "display", "size": 40, "color": "text", "spacing": 0.95 },
+      "kicker":   { "font": "body", "size": 10, "color": "accent", "bold": true },
+      "body":     { "font": "body", "size": 12, "color": "muted", "spacing": 1.15 },
+      "hero":     { "font": "display", "size": 54, "color": "cream" },
+      "poster":   { "font": "poster", "size": 104, "color": "yellow", "spacing": 0.82 }
+    }
+  },
+  "slides": [
+    {
+      "recipe": "title",
+      "bg": "bg",
+      "items": [
+        { "id": "badge", "image": "badge.gif", "at": [7.9, 0.32, 1.55] },
+        { "id": "l1", "text": "Decks", "as": "title", "at": [0.52, 0.95, 7.0, 1.35] },
+        { "id": "l2", "text": "that", "as": "title", "at": [0.52, 2.12, 7.0, 1.35] },
+        { "id": "l3", "text": "move.", "as": "title", "italic": true, "at": [0.52, 3.29, 7.0, 1.35] },
+        { "id": "date", "text": "NOV 2026", "as": "label", "align": "right", "at": [6.4, 5.08, 3.0, 0.25] }
+      ],
+      "build": ["l1 fade 600", "l2 fade 600", "l3 fly-bottom 700"]
+    },
+    {
+      "recipe": "photo-split",
+      "bg": "paper",
+      "transition": "fade",
+      "items": [
+        { "id": "light", "image": "light.gif", "at": [0.45, 0.31, null, 5.0] },
+        { "id": "rule", "shape": "rect", "fill": "accent", "at": [4.9, 0.78, 0.55, 0.03] },
+        { "id": "kicker", "text": "HOW IT WORKS", "as": "kicker", "at": [4.9, 0.9, 4.4, 0.3] },
+        { "id": "h", "as": "headline", "at": [4.9, 1.2, 4.6, 1.4],
+          "lines": ["Native slides.", { "text": "Rendered light.", "italic": true }] },
+        { "id": "b", "as": "body", "at": [4.9, 2.65, 4.3, 0.9],
+          "text": "Layout and text are real Google Slides objects. Motion is built in HTML and rendered to a loop." },
+        { "id": "s1", "at": [4.9, 3.75, 1.45, 1.2], "spacing": 1.05, "lines": [
+          { "text": "01", "font": "display", "size": 30, "color": "accent" },
+          { "text": "Structure", "font": "body", "size": 12, "bold": true, "color": "text" },
+          { "text": "Slides API", "font": "label", "size": 9, "color": "muted" } ] },
+        { "id": "s2", "at": [6.45, 3.75, 1.45, 1.2], "spacing": 1.05, "lines": [
+          { "text": "02", "font": "display", "size": 30, "color": "accent" },
+          { "text": "Motion", "font": "body", "size": 12, "bold": true, "color": "text" },
+          { "text": "HyperFrames → GIF", "font": "label", "size": 9, "color": "muted" } ] },
+        { "id": "s3", "at": [8.0, 3.75, 1.45, 1.2], "spacing": 1.05, "lines": [
+          { "text": "03", "font": "display", "size": 30, "color": "accent" },
+          { "text": "Builds", "font": "body", "size": 12, "bold": true, "color": "text" },
+          { "text": "Native fade + fly", "font": "label", "size": 9, "color": "muted" } ] }
+      ],
+      "build": ["h fade 600", "b fade 500", "s1 fly-bottom 450", "s2 fly-bottom 450", "s3 fly-bottom 450"]
+    },
+    {
+      "recipe": "poster",
+      "bg": "yellow",
+      "transition": "push",
+      "items": [
+        { "id": "pinkb", "shape": "rect", "fill": "pink", "rotate": -5, "at": [-0.45, 1.75, 6.4, 4.6] },
+        { "id": "blueb", "shape": "rect", "fill": "blue", "rotate": 6, "at": [6.05, -0.5, 4.5, 2.95] },
+        { "id": "blackb", "shape": "rect", "fill": "black", "rotate": -4, "at": [6.75, 3.3, 3.9, 2.7] },
+        { "id": "decks", "text": "DECKS", "as": "poster", "size": 150, "color": "black", "spacing": 0.85, "at": [0.3, -0.42, 6.2, 2.3] },
+        { "id": "tm", "lines": ["THAT", "MOVE"], "as": "poster", "rotate": -5, "at": [0.55, 2.2, 5.4, 3.0] },
+        { "id": "outline", "outline": ["NO", "PLUG-INS"], "font": "poster", "size": 48, "color": "white",
+          "spacing": 0.9, "stroke": 1.4, "rotate": 6, "at": [6.6, 0.18, 2.25] },
+        { "id": "live", "text": "LIVE IN GOOGLE SLIDES", "font": "body", "size": 11, "bold": true, "color": "white",
+          "rotate": 6, "at": [6.62, 1.8, 3.2, 0.3] },
+        { "id": "native", "lines": ["100%", "NATIVE"], "as": "poster", "size": 46, "color": "pink", "spacing": 0.85,
+          "rotate": -4, "at": [7.15, 3.72, 3.2, 1.6] },
+        { "id": "star", "shape": "star", "fill": "black", "rotate": 12, "at": [5.35, 1.55, 1.0, 1.0] }
+      ],
+      "build": ["decks fly-top 450", "pinkb fly-left 450", "tm zoom 450", "blueb fly-top 400",
+                "outline fade 400", "live fade 400 with", "blackb fly-right 400", "native zoom 400", "star spin 900"]
+    },
+    {
+      "recipe": "motion-hero",
+      "bg": "bg",
+      "transition": "fade",
+      "items": [
+        { "id": "orbits", "image": "orbits.gif", "at": [0.7, 0, 10, 5.625] },
+        { "id": "k", "text": "RENDERED MOTION", "as": "label", "size": 10, "at": [0.6, 0.6, 4.0, 0.3] },
+        { "id": "h1", "text": "Rendered once.", "as": "hero", "at": [0.55, 1.45, 5.0, 0.95] },
+        { "id": "h2", "text": "Plays forever.", "as": "hero", "color": "ink", "italic": true, "at": [0.55, 2.3, 5.0, 0.95] }
+      ],
+      "build": ["h1 fade 700", "h2 fade 700"]
+    }
+  ]
+}
