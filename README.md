@@ -2,6 +2,23 @@
 
 Make eye-catching, motion-rich Google Slides decks with Claude.
 
+## Set up on a new machine
+
+Paste this into Claude Code:
+
+```text
+Install the motion-slides skill from https://github.com/JavierTSalas/claude-google-slides on this machine.
+1. Clone the repo (default branch) into ~/code/claude-google-slides. If it exists, git pull.
+2. Link ~/code/claude-google-slides/skills/motion-slides to ~/.claude/skills/motion-slides. On Windows, copy it instead. Replace any old copy.
+3. Install python-pptx: python3 -m pip install python-pptx
+4. For motion loops, make sure Node 22+ and ffmpeg are on PATH. Install them if missing.
+5. Optional, for previews: install LibreOffice and poppler (pdftoppm).
+6. Test: run python3 ~/.claude/skills/motion-slides/scripts/style_tour.py editorial-forest <temp folder>/motion-tour, then show me <temp folder>/motion-tour/preview/contact-sheet.png. If Node or ffmpeg is missing, add --no-motion.
+Tell me what works and what is still missing.
+```
+
+Then ask for a deck in any session, for example: *Make a 5-slide Google Slides deck about our Q3 launch in editorial forest.* Or type `/motion-slides`.
+
 ## The skill: `motion-slides`
 
 [`skills/motion-slides/`](skills/motion-slides/SKILL.md) is a Claude skill. Prompts, styles and recipes, plus three small scripts.
@@ -9,7 +26,7 @@ It writes a `.pptx` with native builds, transitions and looping GIFs. Google Dri
 
 **Install**
 
-- Claude Code: copy `skills/motion-slides` to `~/.claude/skills/motion-slides` (or `.claude/skills/` in a project).
+- Claude Code: use the prompt above, or copy `skills/motion-slides` to `~/.claude/skills/motion-slides` (or `.claude/skills/` in a project).
 - Claude apps: zip the `motion-slides` folder and upload it as a custom skill.
 
 **Dependencies**
