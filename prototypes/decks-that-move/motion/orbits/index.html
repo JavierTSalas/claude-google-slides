@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      :root { --ground: #2e4a2b; --ink: #eba6bd; --cream: #f1ebe1; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--ground); }
+      #root { position: relative; width: 1280px; height: 720px; }
+      svg { position: absolute; inset: 0; }
+      .ring { fill: none; stroke: var(--ink); stroke-width: 2; }
+      .dash { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 2 14; stroke-linecap: round; }
+      .pink { fill: var(--ink); }
+      .cream { fill: var(--cream); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1280" data-height="720">
+      <svg class="clip" data-start="0" data-duration="12" data-track-index="0" width="1280" height="720" viewBox="0 0 1280 720">
+        <g id="system">
+          <circle class="ring" cx="930" cy="360" r="132" />
+          <circle class="ring" cx="930" cy="360" r="214" />
+          <circle class="ring" cx="930" cy="360" r="296" />
+          <circle class="ring" cx="930" cy="360" r="400" />
+          <g id="dashring"><circle class="dash" cx="930" cy="360" r="252" /></g>
+          <circle class="pink" cx="930" cy="360" r="54" />
+          <g id="o1"><circle class="cream" cx="1062" cy="360" r="11" /></g>
+          <g id="o2"><circle class="pink" cx="716" cy="360" r="20" /><circle class="ring" cx="716" cy="360" r="34" /></g>
+          <g id="o3"><circle class="pink" cx="930" cy="656" r="8" /></g>
+          <g id="o4"><circle class="cream" cx="930" cy="-40" r="26" /></g>
+        </g>
+      </svg>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const c = { svgOrigin: "930 360", ease: "none", duration: 12 };
+      tl.fromTo("#o1", { rotation: 0 }, { ...c, rotation: 720 }, 0);
+      tl.fromTo("#o2", { rotation: 0 }, { ...c, rotation: -360 }, 0);
+      tl.fromTo("#o3", { rotation: 0 }, { ...c, rotation: 360 }, 0);
+      tl.fromTo("#o4", { rotation: 0 }, { ...c, rotation: 360 }, 0);
+      tl.fromTo("#dashring", { rotation: 0 }, { ...c, rotation: -360 }, 0);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

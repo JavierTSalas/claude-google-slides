@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=480, height=480" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "DM Mono"; src: url("assets/fonts/DMMono-Medium.ttf"); font-weight: 500; }
+      @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.ttf"); }
+      :root { --ground: #2e4a2b; --ink: #eba6bd; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 480px; height: 480px; overflow: hidden; background: var(--ground); }
+      #root { position: relative; width: 480px; height: 480px; }
+      #ring { position: absolute; inset: 0; transform-origin: 240px 240px; }
+      #ring text { font-family: "DM Mono"; font-weight: 500; font-size: 27px; fill: var(--ink); }
+      #core { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      #core span { font-family: "Instrument Serif"; font-size: 120px; color: var(--ink); line-height: 1; }
+      #rule { position: absolute; left: 140px; top: 140px; width: 200px; height: 200px; border: 2px solid var(--ink); border-radius: 50%; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="480" data-height="480">
+      <svg id="ring" class="clip" data-start="0" data-duration="12" data-track-index="0" width="480" height="480" viewBox="0 0 480 480">
+        <defs><path id="circ" d="M 240,240 m -196,0 a 196,196 0 1,1 392,0 a 196,196 0 1,1 -392,0" /></defs>
+        <text><textPath href="#circ" startOffset="0" textLength="1226" lengthAdjust="spacing">NATIVE MOTION ✦ GOOGLE SLIDES ✦ RENDERED LOOP ✦</textPath></text>
+      </svg>
+      <div id="rule" class="clip" data-start="0" data-duration="12" data-track-index="1"></div>
+      <div id="core" class="clip" data-start="0" data-duration="12" data-track-index="2"><span>01</span></div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#ring", { rotation: 0 }, { rotation: 360, duration: 12, ease: "none" }, 0);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
