@@ -12,7 +12,8 @@ Pipeline (sizes from docs/research/gif-compression.md):
   HyperFrames -> lossless PNG frames -> ffmpeg palettegen(stats_mode=full) + paletteuse(no dither,
   diff_mode=rectangle) -> gifsicle -O3 --lossy=30 (if available).
 
-Needs: Node 22+ (npx), ffmpeg. gifsicle comes from PATH or npx gifsicle@7. Fonts download from Google Fonts.
+Needs: Node (latest LTS) with npx, and ffmpeg. HyperFrames and gifsicle come through npx at their latest
+versions (set HYPERFRAMES or GIFSICLE_NPM to pin). Fonts download from Google Fonts.
 """
 import argparse
 import html
@@ -28,21 +29,36 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gfonts  # noqa: E402
 
-HYPERFRAMES = os.environ.get("HYPERFRAMES", "hyperframes@0.9.59")
-GSAP_CDN = re.compile(r'https://cdn\.jsdelivr\.net/npm/gsap@([0-9.]+)/dist/gsap\.min\.js')
+HYPERFRAMES = os.environ.get("HYPERFRAMES", "hyperframes@latest")  # set HYPERFRAMES=hyperframes@<version> to pin
+GIFSICLE_NPM = os.environ.get("GIFSICLE_NPM", "gifsicle@latest")
+GSAP_CDN = re.compile(r'https://cdn\.jsdelivr\.net/npm/gsap(?:@([^/"\']+))?/dist/gsap\.min\.js')
 CACHE = Path(os.environ.get("MOTION_SLIDES_CACHE", Path.home() / ".cache" / "motion-slides"))
 
 
-def local_gsap(version):
-    """Fetch gsap.min.js from the npm registry once (the render browser may not reach CDNs)."""
+def local_gsap(spec):
+    """Fetch gsap.min.js from the npm registry once (the render browser may not reach CDNs).
+
+    spec is the CDN version: an exact x.y.z is used as is; anything else ('3', 'latest') takes
+    the latest release. Cached for 7 days.
+    """
     import io
+    import json as _json
     import tarfile
+    import time
     import urllib.request
 
-    out = CACHE / f"gsap-{version}.min.js"
-    if not out.exists():
+    exact = spec if spec and re.fullmatch(r"\d+\.\d+\.\d+", spec) else None
+    out = CACHE / f"gsap-{exact or 'latest'}.min.js"
+    fresh = out.exists() and (exact or time.time() - out.stat().st_mtime < 7 * 86400)
+    if not fresh:
         CACHE.mkdir(parents=True, exist_ok=True)
-        url = f"https://registry.npmjs.org/gsap/-/gsap-{version}.tgz"
+        ver = exact
+        if not ver:
+            with urllib.request.urlopen("https://registry.npmjs.org/gsap/latest", timeout=60) as r:
+                ver = _json.load(r)["version"]
+            if spec and spec.split(".")[0].isdigit() and ver.split(".")[0] != spec.split(".")[0]:
+                print(f"note: template asks for gsap@{spec}; using latest {ver}")
+        url = f"https://registry.npmjs.org/gsap/-/gsap-{ver}.tgz"
         with urllib.request.urlopen(url, timeout=60) as r:
             tgz = tarfile.open(fileobj=io.BytesIO(r.read()), mode="r:gz")
         out.write_bytes(tgz.extractfile("package/dist/gsap.min.js").read())
@@ -85,7 +101,7 @@ def main():
         a.width = min(a.width or 400, 400)
     for tool in ("npx", "ffmpeg"):
         if not shutil.which(tool):
-            die(f"'{tool}' not found. Install Node 22+ and ffmpeg, or skip motion (native builds still work)")
+            die(f"'{tool}' not found. Install the latest Node LTS and ffmpeg, or skip motion (native builds still work)")
 
     tpl = Path(a.template).resolve()
     src = tpl.read_text()
@@ -153,14 +169,14 @@ def main():
 
         out = Path(a.out)
         out.parent.mkdir(parents=True, exist_ok=True)
-        gifsicle = [shutil.which("gifsicle")] if shutil.which("gifsicle") else ["npx", "-y", "-p", "gifsicle@7", "gifsicle"]
+        gifsicle = [shutil.which("gifsicle")] if shutil.which("gifsicle") else ["npx", "-y", "-p", GIFSICLE_NPM, "gifsicle"]
         ok = a.lossy and subprocess.run([*gifsicle, "--version"], capture_output=True).returncode == 0
         if ok:
             subprocess.run([*gifsicle, "-O3", f"--lossy={a.lossy}", str(raw), "-o", str(out)], check=True)
         else:
             shutil.copy(raw, out)
             if a.lossy:
-                print("note: gifsicle unavailable; GIF is about 2x larger. Install gifsicle 1.92+ to halve it")
+                print("note: gifsicle unavailable; GIF is about 2x larger. Install the latest gifsicle to halve it")
 
         from PIL import Image  # bundled with python-pptx
 

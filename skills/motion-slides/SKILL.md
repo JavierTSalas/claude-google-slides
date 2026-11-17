@@ -20,9 +20,9 @@ The Slides API cannot set animations or transitions. A `.pptx` import can, so th
 
 | Need | For | Install |
 |---|---|---|
-| Python 3.9+ and `python-pptx` | Every deck | `pip install python-pptx` |
-| Node 22+ and `ffmpeg` | Motion loops only | `npx` fetches HyperFrames and gifsicle on first use |
-| LibreOffice and poppler | `--preview` contact sheet only | `soffice`, `pdftoppm` |
+| Python 3 (latest) and `python-pptx` | Every deck | `python3 -m pip install -U python-pptx` |
+| Node (latest LTS) and `ffmpeg` (latest) | Motion loops only | `npx` fetches the latest HyperFrames and gifsicle on first use |
+| LibreOffice and poppler (latest) | `--preview` contact sheet only | `soffice`, `pdftoppm` |
 
 No Google Cloud project and no API keys. Fonts download from Google Fonts on first use.
 
