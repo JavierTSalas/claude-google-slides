@@ -82,11 +82,13 @@ For weights 800-900, pick a single-weight heavy family. PPTX import carries bold
 
 ## 5. Write `style.md`
 
-Follow [SPEC.md](SPEC.md). Name it by the look ("riso-overprint"), never by the source. Put the measured numbers and their source in `probe.md` next to it.
+Follow [SPEC.md](SPEC.md). Name it by the look ("riso-overprint"), never by the source. End the body with the `## Deck theme` JSON block, all nine type presets defined. Put the measured numbers and their source in `probe.md` next to it.
+
+If a loop is part of the signature, write `loops/<name>.html` as a HyperFrames template with color variables named after palette roles (see `motion/*.html`). Render it with `scripts/render_loop.py loops/<name>.html assets/<name>.gif --theme deck.json`. Keep it flat: 4-8 colors, stepped motion where the reference allows, so the GIF stays under 0.5 MB.
 
 ## 6. Prove it with a specimen
 
-Build 4 slides with the deck builder: title, statement or big number, content (list-3 or split), closing. Use one loop. Render previews. Put the specimen contact sheet next to the reference `sheet.jpg` and compare:
+Write `specimen.json` (4-5 slides in [deck-spec](../reference/deck-spec.md) format): title, statement or big number, content (list-3 or split), closing. Use the style's own recipes and loop. Build it with `scripts/build_deck.py specimen.json specimen.pptx --preview preview/`. For a quick check against the shared recipes, run `scripts/style_tour.py <slug> work/tour`. Put the specimen contact sheet next to the reference `sheet.jpg` and compare:
 
 - Would someone who saw the reference recognize the style from a thumbnail?
 - Is the biggest mismatch type, color, density or motion? Fix that one. Re-render. Stop after two passes.
@@ -103,3 +105,17 @@ Fail any of these and fix it before you hand it over:
 - More than about 15 words on a title or statement slide.
 - A font that is not on Google Fonts.
 - Content, logos or footage from the reference.
+
+## Worked examples
+
+| Reference | Kind | Style | What carried over |
+|---|---|---|---|
+| onetake "overlap" film (15 s, one camera move) | video | [riso-overprint](riso-overprint/style.md) | Two measured inks and their overprint. Heavy lowercase type. Words meet from opposite sides. ~300 ms moves → 400 ms builds, push transitions |
+| "Cobalt Grid" HTML deck | deck / site | [cobalt-ledger](cobalt-ledger/style.md) | CSS palette and fonts exactly. One-ink rule. Stair-stepped bar ornament. 280 ms CSS fades → 300 ms fade builds |
+| This project's sample .pptx | pptx | round trip | Every font, color, build effect, build duration and transition came back exactly |
+
+Each style folder has a `probe.md` with the measured numbers and what was dropped, a `specimen.json` deck, and `preview.jpg`.
+
+![riso-overprint specimen](riso-overprint/preview.jpg)
+
+![cobalt-ledger specimen](cobalt-ledger/preview.jpg)

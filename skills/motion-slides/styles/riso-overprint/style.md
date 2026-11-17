@@ -18,6 +18,8 @@ palette:
   accent: "#EE3D98"     # fluorescent pink ink. Measured #F2419B, darkened 2% to reach 3:1 on bg. Display only
   accent2: "#006EA7"    # blue ink (measured). Display and labels, 4.6:1 on bg
   overprint: "#00207A"  # same as ink. Where accent and accent2 cross
+  muted: "#006EA7"      # = accent2. The style has no grey
+  surface: "#F0BFCC"    # pink ink at a 25% screen. Pill and panel fill
   paper: "#FFFFFF"      # text on ink pills
 
 type:
@@ -29,6 +31,7 @@ type:
 
 layout:
   density: low
+  max_words: 15
   align: mixed          # first word hugs the left margin, second word hugs the right
   archetypes: [title, statement, big-number, list-3, closing]
   ornaments:
@@ -49,7 +52,7 @@ motion:
       what: Two halftone clouds, one per ink, drift apart and back on the dot grid. Overprint grows and shrinks.
       seconds: 6
       fps: 2
-      size_px: [720, 720]
+      size_px: [540, 540]
       colors: [bg, accent, accent2, overprint]
       placement: centered between the two display words, behind them
 
@@ -78,15 +81,15 @@ rules:
 
 Canvas 10 × 5.625 in. Margin 0.5 in.
 
-**Title.** Loop `ink-pass` at x 2.9, y 0.55, 4.2 × 4.2 in, behind everything. Word 1 in `display` pink, left 0.5, top 1.1, right-aligned to x 5.2. Word 2 in `display` `accent2`, left 4.9, top 1.1. Labels in `label` at y 4.85: left one pink, right one blue, right-aligned to 9.5. Registration marks at the 4 corners, 0.45 in square, 0.2 in inset. Builds: word 1 fly-left 400, word 2 fly-right with, labels fade after 300.
+**Title.** Loop `ink-pass` at x 2.9, y 0.55, 4.2 × 4.2 in, behind everything. Word 1 in `display` pink at 130 pt, right-aligned to x 5.0, top 1.75. Word 2 in `accent2`, left 5.25. Leave a 0.25 in gap so two words never read as one. Labels in `label` at y 4.85: left one pink, right one blue, right-aligned to 9.5. Registration marks at the 4 corners, 0.45 in square, 0.2 in inset. Builds: word 1 fly-left 400, word 2 fly-right with, labels fade after 300.
 
-**Statement.** Two lines, max 8 words. Line 1 in `heading` at 54 pt pink, line 2 at 54 pt blue, both left at 0.5, tops 1.5 and 2.4. One `label` line under it at y 3.6. Builds: line 1 fly-left 400, line 2 fly-right after 400.
+**Statement.** Two lines, max 8 words. Line 1 in `heading` at 48 pt pink, line 2 at 48 pt blue, both left at 0.75, tops 1.45 and 2.3. One `label` line under it at y 3.6. Builds: line 1 fly-left 400, line 2 fly-right after 400.
 
-**Big number.** Number in `number` pink, left 0.5, top 0.7. A blue ink pill (rounded rectangle, `accent2` fill, `paper` text in `label`) under it. One `body` sentence, max 14 words, width 4 in. Loop on the right half, x 5.4, y 0.75, 4.1 in square. Builds: number zoom 450, pill fly-left after 350, body fade after 300.
+**Big number.** Number in `number` pink at 200 pt, left 0.7, top 0.55. A blue ink pill (rounded rectangle, `accent2` fill, `paper` text in `label`) under it. One `body` sentence, max 14 words, width 4 in. Loop on the right half, x 5.4, y 0.75, 4.1 in square. Builds: number zoom 450, pill fly-left after 350, body fade after 300.
 
-**List of 3.** Three columns at x 0.5, 3.6, 6.7, width 2.8. Each: an ink pill (pink, blue, navy) with a mono number, a `heading` at 30 pt, a `body` line. Builds: columns fly-bottom after, 400 each.
+**List of 3.** Three columns at x 0.75, 3.72, 6.69, width 2.55. Each: an ink bar 0.09 in tall (pink, blue, navy), a mono number, a `heading` at 24 pt, one `body` line. Builds: columns fly-bottom after, 400 each.
 
-**Closing.** One word in `display` at 260 pt, bleeding off the left edge (left -0.6). Split its letters across the two inks (two text boxes). One `label` line at y 4.9. Builds: pink part fly-left 450, blue part fly-right with.
+**Closing.** One word in `display` at 290 pt, bleeding off the left edge (left -0.5). Split its letters across the two inks: two text boxes, the second starting where the first part ends (measure it with the font). One `label` line at y 4.9. Builds: pink part fly-left 450, blue part fly-right with.
 
 ## Motion
 
@@ -95,3 +98,28 @@ Fast and physical. The reference is one continuous camera move with ~300 ms move
 ## Example prompt
 
 > Make a 5-slide deck for a Thursday-night printmaking club, style riso-overprint. Title "print club". One stat, one 3-step list, close with "see you there".
+
+Type is lowercase by design. The builder does not change case, so write the words in lowercase.
+
+## Deck theme
+
+Paste into `deck.json` → `"theme"`.
+
+```json
+{
+  "colors": { "bg": "#F0EADE", "ink": "#00207A", "accent": "#EE3D98", "accent2": "#006EA7", "overprint": "#00207A",
+              "muted": "#006EA7", "surface": "#F0BFCC", "paper": "#FFFFFF" },
+  "fonts": { "display": "Archivo Black", "body": "Archivo", "label": "Space Mono" },
+  "type": {
+    "title":    { "font": "display", "size": 150, "color": "accent", "spacing": 0.82 },
+    "hero":     { "font": "display", "size": 72, "color": "accent2", "spacing": 0.85 },
+    "headline": { "font": "display", "size": 44, "color": "accent2", "spacing": 0.9 },
+    "number":   { "font": "display", "color": "accent", "spacing": 0.8 },
+    "quote":    { "font": "display", "size": 34, "color": "ink", "spacing": 0.95 },
+    "kicker":   { "font": "label", "size": 11, "bold": true, "color": "accent" },
+    "step":     { "font": "display", "size": 24, "color": "ink", "spacing": 0.95 },
+    "body":     { "font": "body", "size": 14, "color": "ink", "spacing": 1.2 },
+    "label":    { "font": "label", "size": 10, "bold": true, "color": "accent2" }
+  }
+}
+```

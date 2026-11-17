@@ -1,0 +1,999 @@
+{
+ "title": "Style specimen: cobalt-ledger",
+ "assets": "assets",
+ "max_words": 40,
+ "theme": {
+  "colors": {
+   "bg": "#F0EBDE",
+   "ink": "#1F2BE0",
+   "accent": "#1F2BE0",
+   "accent2": "#1F2BE0",
+   "surface": "#E6E0CE",
+   "muted": "#5560E5",
+   "tint": "#B4B6E6",
+   "grid": "#DBD8DE"
+  },
+  "fonts": {
+   "display": "Newsreader",
+   "body": "Hanken Grotesk",
+   "label": "DM Mono"
+  },
+  "type": {
+   "title": {
+    "font": "display",
+    "size": 72,
+    "color": "ink",
+    "spacing": 0.95
+   },
+   "hero": {
+    "font": "display",
+    "size": 54,
+    "color": "ink",
+    "spacing": 0.95
+   },
+   "headline": {
+    "font": "display",
+    "size": 30,
+    "color": "ink",
+    "spacing": 1.05
+   },
+   "number": {
+    "font": "display",
+    "color": "ink",
+    "spacing": 0.9
+   },
+   "quote": {
+    "font": "display",
+    "size": 30,
+    "color": "ink",
+    "spacing": 1.05
+   },
+   "kicker": {
+    "font": "body",
+    "size": 8,
+    "bold": true,
+    "color": "ink"
+   },
+   "step": {
+    "font": "display",
+    "size": 18,
+    "color": "ink"
+   },
+   "body": {
+    "font": "body",
+    "size": 11,
+    "color": "ink",
+    "spacing": 1.3
+   },
+   "label": {
+    "font": "label",
+    "size": 8,
+    "color": "ink"
+   }
+  }
+ },
+ "slides": [
+  {
+   "recipe": "title",
+   "items": [
+    {
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      0.45,
+      0.3,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "id": "loop",
+     "image": "stair-scan.gif",
+     "at": [
+      7.45,
+      0.55,
+      1.9
+     ]
+    },
+    {
+     "id": "t",
+     "lines": [
+      "The quiet",
+      "year."
+     ],
+     "as": "title",
+     "at": [
+      0.45,
+      0.95,
+      6.4,
+      2.2
+     ]
+    },
+    {
+     "id": "sub",
+     "at": [
+      0.45,
+      3.45,
+      6.4,
+      0.7
+     ],
+     "spacing": 1.2,
+     "lines": [
+      {
+       "text": "READING ROOM · ANNUAL REPORT 2026",
+       "as": "kicker"
+      },
+      {
+       "text": "What a small library learned this year.",
+       "as": "headline",
+       "size": 22
+      }
+     ]
+    },
+    {
+     "id": "c1",
+     "at": [
+      0.45,
+      4.72,
+      2.2,
+      0.5
+     ],
+     "spacing": 1.25,
+     "lines": [
+      {
+       "text": "PREPARED BY",
+       "as": "kicker"
+      },
+      {
+       "text": "The front desk",
+       "as": "body",
+       "size": 10
+      }
+     ]
+    },
+    {
+     "id": "c2",
+     "at": [
+      2.75,
+      4.72,
+      2.2,
+      0.5
+     ],
+     "spacing": 1.25,
+     "lines": [
+      {
+       "text": "PUBLISHED",
+       "as": "kicker"
+      },
+      {
+       "text": "December, for members",
+       "as": "body",
+       "size": 10
+      }
+     ]
+    }
+   ],
+   "build": [
+    "t fade 300",
+    "sub fade 300",
+    "c1 fade 300",
+    "c2 fade 300 with"
+   ],
+   "bg": "bg"
+  },
+  {
+   "recipe": "statement",
+   "items": [
+    {
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      0.45,
+      0.3,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "id": "st",
+     "as": "quote",
+     "size": 34,
+     "at": [
+      0.45,
+      1.3,
+      7.9,
+      2.6
+     ],
+     "lines": [
+      [
+       {
+        "text": "People stayed longer once we took the clocks off the wall, "
+       },
+       {
+        "text": "and they came back on weekdays.",
+        "bold": true
+       }
+      ]
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      0.45,
+      4.5,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "id": "k",
+     "text": "FROM THE DESK LOG, MARCH",
+     "as": "kicker",
+     "at": [
+      0.45,
+      4.62,
+      6,
+      0.2
+     ]
+    }
+   ],
+   "build": [
+    "st fade 400",
+    "k fade 300"
+   ],
+   "bg": "bg",
+   "transition": {
+    "type": "fade",
+    "speed": "fast"
+   }
+  },
+  {
+   "recipe": "big-number-with-bars",
+   "max_words": 40,
+   "items": [
+    {
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      0.45,
+      0.3,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "id": "h",
+     "text": "Average stay, by month.",
+     "as": "headline",
+     "at": [
+      0.45,
+      0.5,
+      6,
+      0.55
+     ]
+    },
+    {
+     "id": "num",
+     "text": "3.4 h",
+     "as": "number",
+     "size": 88,
+     "at": [
+      0.45,
+      1.3,
+      3.2,
+      1.35
+     ]
+    },
+    {
+     "id": "cap",
+     "at": [
+      0.45,
+      2.8,
+      2.9,
+      1.2
+     ],
+     "spacing": 1.3,
+     "lines": [
+      {
+       "text": "NOVEMBER",
+       "as": "kicker"
+      },
+      {
+       "text": "Up from 1.9 hours in April. The longest visits were on rainy Tuesdays.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "grid",
+     "at": [
+      3.9,
+      3.609,
+      5.65,
+      0.0104
+     ]
+    },
+    {
+     "text": "1 h",
+     "as": "label",
+     "color": "muted",
+     "at": [
+      3.48,
+      3.539,
+      0.35,
+      0.15
+     ],
+     "align": "right"
+    },
+    {
+     "shape": "rect",
+     "fill": "grid",
+     "at": [
+      3.9,
+      2.668,
+      5.65,
+      0.0104
+     ]
+    },
+    {
+     "text": "2 h",
+     "as": "label",
+     "color": "muted",
+     "at": [
+      3.48,
+      2.598,
+      0.35,
+      0.15
+     ],
+     "align": "right"
+    },
+    {
+     "shape": "rect",
+     "fill": "grid",
+     "at": [
+      3.9,
+      1.726,
+      5.65,
+      0.0104
+     ]
+    },
+    {
+     "text": "3 h",
+     "as": "label",
+     "color": "muted",
+     "at": [
+      3.48,
+      1.656,
+      0.35,
+      0.15
+     ],
+     "align": "right"
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      3.9,
+      1.35,
+      0.55,
+      1.412
+     ]
+    },
+    {
+     "id": "b0",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      3.9,
+      2.762,
+      0.55,
+      1.788
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      4.629,
+      1.35,
+      0.55,
+      1.224
+     ]
+    },
+    {
+     "id": "b1",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      4.629,
+      2.574,
+      0.55,
+      1.976
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      5.357,
+      1.35,
+      0.55,
+      1.224
+     ]
+    },
+    {
+     "id": "b2",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      5.357,
+      2.574,
+      0.55,
+      1.976
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      6.086,
+      1.35,
+      0.55,
+      0.941
+     ]
+    },
+    {
+     "id": "b3",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      6.086,
+      2.291,
+      0.55,
+      2.259
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      6.814,
+      1.35,
+      0.55,
+      0.753
+     ]
+    },
+    {
+     "id": "b4",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      6.814,
+      2.103,
+      0.55,
+      2.447
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      7.543,
+      1.35,
+      0.55,
+      0.753
+     ]
+    },
+    {
+     "id": "b5",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      7.543,
+      2.103,
+      0.55,
+      2.447
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      8.271,
+      1.35,
+      0.55,
+      0.376
+     ]
+    },
+    {
+     "id": "b6",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      8.271,
+      1.726,
+      0.55,
+      2.824
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      9.0,
+      1.35,
+      0.55,
+      0.0
+     ]
+    },
+    {
+     "id": "b7",
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      9.0,
+      1.35,
+      0.55,
+      3.2
+     ]
+    },
+    {
+     "text": "APR",
+     "as": "label",
+     "align": "center",
+     "at": [
+      3.9,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "MAY",
+     "as": "label",
+     "align": "center",
+     "at": [
+      4.629,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "JUN",
+     "as": "label",
+     "align": "center",
+     "at": [
+      5.357,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "JUL",
+     "as": "label",
+     "align": "center",
+     "at": [
+      6.086,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "AUG",
+     "as": "label",
+     "align": "center",
+     "at": [
+      6.814,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "SEP",
+     "as": "label",
+     "align": "center",
+     "at": [
+      7.543,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "OCT",
+     "as": "label",
+     "align": "center",
+     "at": [
+      8.271,
+      4.63,
+      0.55,
+      0.18
+     ]
+    },
+    {
+     "text": "NOV",
+     "as": "label",
+     "align": "center",
+     "at": [
+      9.0,
+      4.63,
+      0.55,
+      0.18
+     ]
+    }
+   ],
+   "build": [
+    "num fade 300",
+    "cap fade 300",
+    "b0 fly-bottom 300",
+    "b1 fly-bottom 300 with",
+    "b2 fly-bottom 300 with",
+    "b3 fly-bottom 300 with",
+    "b4 fly-bottom 300 with",
+    "b5 fly-bottom 300 with",
+    "b6 fly-bottom 300 with",
+    "b7 fly-bottom 300 with"
+   ],
+   "bg": "bg",
+   "transition": {
+    "type": "fade",
+    "speed": "fast"
+   }
+  },
+  {
+   "recipe": "list-2x3",
+   "max_words": 75,
+   "items": [
+    {
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      0.45,
+      0.3,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "id": "h",
+     "text": "What changed.",
+     "as": "headline",
+     "at": [
+      0.45,
+      0.5,
+      6,
+      0.55
+     ]
+    },
+    {
+     "id": "e0",
+     "at": [
+      0.45,
+      1.35,
+      4.2,
+      0.95
+     ],
+     "spacing": 1.15,
+     "lines": [
+      {
+       "text": "01.",
+       "as": "label"
+      },
+      {
+       "text": "No clocks",
+       "as": "step"
+      },
+      {
+       "text": "Visits got longer the week they came down.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "e1",
+     "at": [
+      5.1000000000000005,
+      1.35,
+      4.2,
+      0.95
+     ],
+     "spacing": 1.15,
+     "lines": [
+      {
+       "text": "02.",
+       "as": "label"
+      },
+      {
+       "text": "Long tables",
+       "as": "step"
+      },
+      {
+       "text": "Two tables of twelve replaced eight of four.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "e2",
+     "at": [
+      0.45,
+      2.47,
+      4.2,
+      0.95
+     ],
+     "spacing": 1.15,
+     "lines": [
+      {
+       "text": "03.",
+       "as": "label"
+      },
+      {
+       "text": "Late Thursdays",
+       "as": "step"
+      },
+      {
+       "text": "Open until ten. Half the new members came then.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "e3",
+     "at": [
+      5.1000000000000005,
+      2.47,
+      4.2,
+      0.95
+     ],
+     "spacing": 1.15,
+     "lines": [
+      {
+       "text": "04.",
+       "as": "label"
+      },
+      {
+       "text": "Paper sign-out",
+       "as": "step"
+      },
+      {
+       "text": "A ledger at the desk. Nobody asked for an app.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "e4",
+     "at": [
+      0.45,
+      3.5900000000000003,
+      4.2,
+      0.95
+     ],
+     "spacing": 1.15,
+     "lines": [
+      {
+       "text": "05.",
+       "as": "label"
+      },
+      {
+       "text": "Quiet hour",
+       "as": "step"
+      },
+      {
+       "text": "Ten to eleven, no talking, every day.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "e5",
+     "at": [
+      5.1000000000000005,
+      3.5900000000000003,
+      4.2,
+      0.95
+     ],
+     "spacing": 1.15,
+     "lines": [
+      {
+       "text": "06.",
+       "as": "label"
+      },
+      {
+       "text": "Reading club",
+       "as": "step"
+      },
+      {
+       "text": "Twelve books, one a month, read aloud in part.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      0.45,
+      2.35,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      0.45,
+      3.47,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "shape": "rect",
+     "fill": "tint",
+     "at": [
+      0.45,
+      4.59,
+      9.1,
+      0.0104
+     ]
+    }
+   ],
+   "build": [
+    "e0 fade 300",
+    "e1 fade 300 with",
+    "e2 fade 300",
+    "e3 fade 300 with",
+    "e4 fade 300",
+    "e5 fade 300 with"
+   ],
+   "bg": "bg",
+   "transition": {
+    "type": "fade",
+    "speed": "fast"
+   }
+  },
+  {
+   "recipe": "closing",
+   "items": [
+    {
+     "shape": "rect",
+     "fill": "ink",
+     "at": [
+      0.45,
+      0.3,
+      9.1,
+      0.0104
+     ]
+    },
+    {
+     "id": "loop",
+     "image": "stair-scan.gif",
+     "at": [
+      0.45,
+      0.55,
+      1.9
+     ]
+    },
+    {
+     "id": "t",
+     "lines": [
+      "Until next",
+      "year."
+     ],
+     "as": "title",
+     "align": "right",
+     "at": [
+      3.2,
+      1.45,
+      6.35,
+      2.2
+     ]
+    },
+    {
+     "id": "c1",
+     "at": [
+      2.75,
+      4.72,
+      1.6,
+      0.5
+     ],
+     "spacing": 1.25,
+     "lines": [
+      {
+       "text": "EDITED BY",
+       "as": "kicker"
+      },
+      {
+       "text": "The front desk",
+       "as": "body",
+       "size": 10
+      }
+     ]
+    },
+    {
+     "id": "c2",
+     "at": [
+      4.45,
+      4.72,
+      1.9,
+      0.5
+     ],
+     "spacing": 1.25,
+     "lines": [
+      {
+       "text": "SET IN",
+       "as": "kicker"
+      },
+      {
+       "text": "Newsreader, Hanken Grotesk",
+       "as": "body",
+       "size": 10
+      }
+     ]
+    },
+    {
+     "id": "c3",
+     "at": [
+      6.45,
+      4.72,
+      1.5,
+      0.5
+     ],
+     "spacing": 1.25,
+     "lines": [
+      {
+       "text": "NEXT ISSUE",
+       "as": "kicker"
+      },
+      {
+       "text": "December 2027",
+       "as": "body",
+       "size": 10
+      }
+     ]
+    },
+    {
+     "id": "c4",
+     "at": [
+      8.05,
+      4.72,
+      1.5,
+      0.5
+     ],
+     "spacing": 1.25,
+     "lines": [
+      {
+       "text": "OPEN",
+       "as": "kicker"
+      },
+      {
+       "text": "Tue to Sun",
+       "as": "body",
+       "size": 10
+      }
+     ]
+    }
+   ],
+   "build": [
+    "t fade 400",
+    "c1 fade 300",
+    "c2 fade 300 with",
+    "c3 fade 300 with",
+    "c4 fade 300 with"
+   ],
+   "bg": "bg",
+   "transition": {
+    "type": "fade",
+    "speed": "fast"
+   }
+  }
+ ]
+}

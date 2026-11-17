@@ -1,15 +1,21 @@
 <!doctype html>
-<html lang="en">
+<!-- Two halftone clouds, one per ink. Multiply prints the overprint color where they meet.
+     Stepped on the dot grid every 0.5 s, so render at 2 fps: 12 frames, ~150 KB.
+     Suggested render: --fps 2 --width 540 --colors 16. Frame 0 is a complete picture. -->
+<html lang="en" data-composition-variables='[
+  {"id":"bg","type":"color","label":"Paper (must equal the slide background)","default":"#F0EADE"},
+  {"id":"accent","type":"color","label":"First ink","default":"#EE3D98"},
+  {"id":"accent2","type":"color","label":"Second ink","default":"#006EA7"}
+]'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=720, height=720" />
-    <script src="assets/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <style>
-      /* palette roles from style.md */
       :root { --bg: #F0EADE; --accent: #EE3D98; --accent2: #006EA7; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 720px; height: 720px; overflow: hidden; background: var(--bg); }
-      #root { position: relative; width: 720px; height: 720px; }
+      #root { position: relative; width: 720px; height: 720px; background: var(--bg); }
       svg { position: absolute; inset: 0; }
       .cloud { mix-blend-mode: multiply; }
       #a circle { fill: var(--accent); }
@@ -17,9 +23,6 @@
     </style>
   </head>
   <body>
-    <!-- Two halftone clouds, one per ink. Multiply makes the overprint color where they meet.
-         Motion is stepped on the dot grid every 0.5 s (reference: ~300 ms moves, ~350 ms holds),
-         so the GIF can run at 2 fps and stay tiny. Frame 0 is a complete picture. -->
     <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="720" data-height="720">
       <svg class="clip" data-start="0" data-duration="6" data-track-index="0" width="720" height="720" viewBox="0 0 720 720">
         <g id="a" class="cloud"></g>
@@ -27,6 +30,8 @@
       </svg>
     </div>
     <script>
+      const vars = window.__hyperframes?.getVariables?.() || {};
+      for (const [k, val] of Object.entries(vars)) document.documentElement.style.setProperty("--" + k, val);
       const G = 14, R = 5.4, RAD = 205;
       function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
       function cloud(id, cx, cy, seed) {
@@ -49,7 +54,6 @@
       tl.set({}, {}, 6);
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
-      tl.seek(0);
     </script>
   </body>
 </html>
