@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- Signal ripple for the timeline's last dot. Seamless 2.4 s loop on the clay ground. -->
+<html><head><meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 320px; height: 320px; overflow: hidden; background: #c65d3b; }
+  circle { fill: none; stroke: #f6eee3; stroke-width: 3; }
+</style></head><body>
+<svg width="320" height="320" viewBox="0 0 320 320">
+  <circle id="r0" cx="160" cy="160"/><circle id="r1" cx="160" cy="160"/><circle id="r2" cx="160" cy="160"/>
+</svg>
+<script>
+  window.LOOP = { w: 320, h: 320, fps: 15, dur: 2.4 };
+  // three rings, evenly staggered; each grows 14 -> 150 px and fades out
+  window.seek = (t) => {
+    for (let i = 0; i < 3; i++) {
+      const p = ((t / 2.4) + i / 3) % 1;
+      const e = 1 - Math.pow(1 - p, 2);
+      const c = document.getElementById("r" + i);
+      c.setAttribute("r", 14 + 136 * e);
+      c.setAttribute("opacity", Math.pow(1 - p, 1.4));
+    }
+  };
+  seek(0);
+</script></body></html>

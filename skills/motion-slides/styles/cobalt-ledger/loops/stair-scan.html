@@ -1,0 +1,80 @@
+<!doctype html>
+<!-- A column of thin bars with a stair-stepped edge. The profile scrolls up one row every 0.25 s.
+     The previous step stays as a pale ghost. Render at 4 fps: 24 frames, ~65 KB.
+     Suggested render: --fps 4 --width 240 --colors 8. -->
+<html lang="en" data-composition-variables='[
+  {"id":"bg","type":"color","label":"Paper (must equal the slide background)","default":"#F0EBDE"},
+  {"id":"ink","type":"color","label":"Bars","default":"#1F2BE0"},
+  {"id":"tint","type":"color","label":"Ghost bars (ink at ~35% on paper)","default":"#B4B6E6"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=360, height=720" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <style>
+      :root { --bg: #F0EBDE; --ink: #1F2BE0; --tint: #B4B6E6; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 360px; height: 720px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 360px; height: 720px; background: var(--bg); }
+      svg { position: absolute; inset: 0; }
+      .f { visibility: hidden; }
+      .ink rect { fill: var(--ink); }
+      .ghost rect { fill: var(--tint); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="360" data-height="720">
+      <svg id="s" class="clip" data-start="0" data-duration="6" data-track-index="0" width="360" height="720" viewBox="0 0 360 720"></svg>
+    </div>
+    <script>
+      const vars = window.__hyperframes?.getVariables?.() || {};
+      for (const [k, val] of Object.entries(vars)) document.documentElement.style.setProperty("--" + k, val);
+      const COLS = 40, PITCH = 9, W = 3, ROWS = 24, RH = 30, CORE0 = 16, CORE1 = 23, STEPS = 24;
+      function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const r = rng(4);
+      // stair profile: runs of 2-5 rows share one left/right extent
+      const L = [], R = [];
+      while (L.length < ROWS) {
+        const run = 2 + Math.floor(r() * 4), l = Math.floor(r() * 15), rr = Math.floor(r() * 15);
+        for (let i = 0; i < run && L.length < ROWS; i++) { L.push(i === 0 && r() < 0.3 ? 0 : l); R.push(rr); }
+      }
+      const ns = "http://www.w3.org/2000/svg", svg = document.getElementById("s");
+      function layer(k, cls) {
+        const g = document.createElementNS(ns, "g");
+        g.setAttribute("class", cls);
+        for (let c = 0; c < COLS; c++) {
+          let start = -1;
+          for (let row = 0; row <= ROWS; row++) {
+            const p = (row + k) % ROWS;
+            const on = row < ROWS && c >= CORE0 - L[p] && c <= CORE1 + R[p];
+            if (on && start < 0) start = row;
+            if (!on && start >= 0) {
+              const e = document.createElementNS(ns, "rect");
+              e.setAttribute("x", c * PITCH + 3); e.setAttribute("y", start * RH);
+              e.setAttribute("width", W); e.setAttribute("height", (row - start) * RH);
+              g.appendChild(e); start = -1;
+            }
+          }
+        }
+        return g;
+      }
+      const frames = [];
+      for (let k = 0; k < STEPS; k++) {
+        const f = document.createElementNS(ns, "g");
+        f.setAttribute("class", "f");
+        f.appendChild(layer((k + STEPS - 1) % STEPS, "ghost"));
+        f.appendChild(layer(k, "ink"));
+        svg.appendChild(f);
+        frames.push(f);
+      }
+      const tl = gsap.timeline({ paused: true });
+      frames.forEach((f, k) => {
+        tl.set(f, { visibility: "visible" }, k * 0.25);
+        if (k < STEPS - 1) tl.set(f, { visibility: "hidden" }, (k + 1) * 0.25);
+      });
+      tl.set({}, {}, 6);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

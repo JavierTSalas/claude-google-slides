@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- Rotating text badge. Seamless 12 s loop: one full turn. -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Instrument+Serif&display=block" rel="stylesheet">
+<style>
+  :root { --ground: #2f4b2b; --ink: #eba6bd; }
+  html, body { margin: 0; width: 480px; height: 480px; overflow: hidden; background: var(--ground); }
+  #ring text { font-family: "DM Mono"; font-weight: 500; font-size: 27px; fill: var(--ink); }
+  #core { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+          font-family: "Instrument Serif"; font-size: 120px; color: var(--ink); line-height: 1; }
+  #rule { position: absolute; left: 140px; top: 140px; width: 196px; height: 196px; border: 2px solid var(--ink); border-radius: 50%; }
+</style></head><body>
+<svg id="ring" width="480" height="480" viewBox="0 0 480 480" style="position:absolute">
+  <defs><path id="circ" d="M 240,240 m -196,0 a 196,196 0 1,1 392,0 a 196,196 0 1,1 -392,0"/></defs>
+  <g id="spin"><text><textPath href="#circ" textLength="1226" lengthAdjust="spacing">NATIVE MOTION ✦ GOOGLE SLIDES ✦ RENDERED LOOP ✦</textPath></text></g>
+</svg>
+<div id="rule"></div><div id="core">01</div>
+<script>
+  window.LOOP = { w: 480, h: 480, fps: 12, dur: 12 };
+  window.seek = (t) => document.getElementById("spin").setAttribute("transform", `rotate(${30 * t} 240 240)`);
+  seek(0);
+</script></body></html>

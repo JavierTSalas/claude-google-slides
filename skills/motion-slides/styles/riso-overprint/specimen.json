@@ -1,0 +1,611 @@
+{
+ "title": "Style specimen: riso-overprint",
+ "assets": "assets",
+ "max_words": 15,
+ "transition": "push",
+ "theme": {
+  "colors": {
+   "bg": "#F0EADE",
+   "ink": "#00207A",
+   "accent": "#EE3D98",
+   "accent2": "#006EA7",
+   "overprint": "#00207A",
+   "muted": "#006EA7",
+   "surface": "#F0BFCC",
+   "paper": "#FFFFFF"
+  },
+  "fonts": {
+   "display": "Archivo Black",
+   "body": "Archivo",
+   "label": "Space Mono"
+  },
+  "type": {
+   "title": {
+    "font": "display",
+    "size": 150,
+    "color": "accent",
+    "spacing": 0.82
+   },
+   "hero": {
+    "font": "display",
+    "size": 72,
+    "color": "accent2",
+    "spacing": 0.85
+   },
+   "headline": {
+    "font": "display",
+    "size": 44,
+    "color": "accent2",
+    "spacing": 0.9
+   },
+   "number": {
+    "font": "display",
+    "color": "accent",
+    "spacing": 0.8
+   },
+   "quote": {
+    "font": "display",
+    "size": 34,
+    "color": "ink",
+    "spacing": 0.95
+   },
+   "kicker": {
+    "font": "label",
+    "size": 11,
+    "bold": true,
+    "color": "accent"
+   },
+   "step": {
+    "font": "display",
+    "size": 24,
+    "color": "ink",
+    "spacing": 0.95
+   },
+   "body": {
+    "font": "body",
+    "size": 14,
+    "color": "ink",
+    "spacing": 1.2
+   },
+   "label": {
+    "font": "label",
+    "size": 10,
+    "bold": true,
+    "color": "accent2"
+   }
+  }
+ },
+ "slides": [
+  {
+   "recipe": "title",
+   "items": [
+    {
+     "id": "loop",
+     "image": "ink-pass.gif",
+     "at": [
+      2.9,
+      0.71,
+      4.2
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "id": "w1",
+     "text": "print",
+     "as": "title",
+     "size": 130,
+     "align": "right",
+     "at": [
+      0.35,
+      1.75,
+      4.65,
+      1.6
+     ]
+    },
+    {
+     "id": "w2",
+     "text": "club",
+     "as": "title",
+     "size": 130,
+     "color": "accent2",
+     "at": [
+      5.25,
+      1.75,
+      4.4,
+      1.6
+     ]
+    },
+    {
+     "id": "k1",
+     "text": "spring session · thursdays",
+     "as": "kicker",
+     "at": [
+      0.75,
+      4.98,
+      4.3,
+      0.3
+     ]
+    },
+    {
+     "id": "k2",
+     "text": "studio b · 6–9 pm",
+     "as": "label",
+     "align": "right",
+     "at": [
+      5.0,
+      4.98,
+      4.25,
+      0.3
+     ]
+    }
+   ],
+   "build": [
+    "w1 fly-left 400",
+    "w2 fly-right 400 with",
+    "k1 fade 300",
+    "k2 fade 300 with"
+   ],
+   "bg": "bg"
+  },
+  {
+   "recipe": "statement",
+   "transition": "push",
+   "items": [
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "id": "l1",
+     "text": "two inks, one pass.",
+     "as": "headline",
+     "size": 48,
+     "color": "accent",
+     "at": [
+      0.75,
+      1.45,
+      8.5,
+      0.9
+     ]
+    },
+    {
+     "id": "l2",
+     "text": "no undo.",
+     "as": "headline",
+     "size": 48,
+     "at": [
+      0.75,
+      2.3,
+      8.5,
+      0.9
+     ]
+    },
+    {
+     "id": "k",
+     "text": "bring an idea. leave with forty prints.",
+     "as": "label",
+     "at": [
+      0.75,
+      3.55,
+      8.0,
+      0.3
+     ]
+    }
+   ],
+   "build": [
+    "l1 fly-left 400",
+    "l2 fly-right 400",
+    "k fade 300"
+   ],
+   "bg": "bg"
+  },
+  {
+   "recipe": "big-number",
+   "transition": "push",
+   "items": [
+    {
+     "id": "loop",
+     "image": "ink-pass.gif",
+     "at": [
+      5.4,
+      0.72,
+      4.2
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "id": "num",
+     "text": "40",
+     "as": "number",
+     "size": 200,
+     "at": [
+      0.7,
+      0.55,
+      4.2,
+      2.75
+     ]
+    },
+    {
+     "id": "pill",
+     "shape": "round-rect",
+     "fill": "accent2",
+     "at": [
+      0.75,
+      3.35,
+      2.55,
+      0.42
+     ]
+    },
+    {
+     "id": "pt",
+     "text": "prints per person",
+     "as": "label",
+     "color": "paper",
+     "align": "center",
+     "anchor": "middle",
+     "at": [
+      0.75,
+      3.35,
+      2.55,
+      0.42
+     ]
+    },
+    {
+     "id": "b",
+     "text": "Pulled on the club drum. Paper is on us.",
+     "as": "body",
+     "at": [
+      0.75,
+      3.95,
+      4.2,
+      0.7
+     ]
+    }
+   ],
+   "build": [
+    "num zoom 450",
+    "pill fly-left 350",
+    "pt fly-left 350 with",
+    "b fade 300"
+   ],
+   "bg": "bg"
+  },
+  {
+   "recipe": "list-3",
+   "transition": "push",
+   "max_words": 40,
+   "items": [
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "id": "h",
+     "text": "how a night runs",
+     "as": "headline",
+     "at": [
+      0.75,
+      0.7,
+      8.5,
+      0.8
+     ]
+    },
+    {
+     "id": "r1",
+     "shape": "rect",
+     "fill": "accent",
+     "at": [
+      0.75,
+      1.95,
+      2.55,
+      0.09
+     ]
+    },
+    {
+     "id": "c1",
+     "at": [
+      0.75,
+      2.2,
+      2.55,
+      2.2
+     ],
+     "spacing": 1.05,
+     "lines": [
+      {
+       "text": "01",
+       "as": "label",
+       "color": "accent"
+      },
+      {
+       "text": "sketch",
+       "as": "step"
+      },
+      {
+       "text": "One idea, two colors. Pencil is fine.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "r2",
+     "shape": "rect",
+     "fill": "accent2",
+     "at": [
+      3.72,
+      1.95,
+      2.55,
+      0.09
+     ]
+    },
+    {
+     "id": "c2",
+     "at": [
+      3.72,
+      2.2,
+      2.55,
+      2.2
+     ],
+     "spacing": 1.05,
+     "lines": [
+      {
+       "text": "02",
+       "as": "label"
+      },
+      {
+       "text": "separate",
+       "as": "step"
+      },
+      {
+       "text": "Split it into a pink layer and a blue layer.",
+       "as": "body"
+      }
+     ]
+    },
+    {
+     "id": "r3",
+     "shape": "rect",
+     "fill": "overprint",
+     "at": [
+      6.69,
+      1.95,
+      2.55,
+      0.09
+     ]
+    },
+    {
+     "id": "c3",
+     "at": [
+      6.69,
+      2.2,
+      2.55,
+      2.2
+     ],
+     "spacing": 1.05,
+     "lines": [
+      {
+       "text": "03",
+       "as": "label",
+       "color": "overprint"
+      },
+      {
+       "text": "print",
+       "as": "step"
+      },
+      {
+       "text": "Run both through the drum. Watch them meet.",
+       "as": "body"
+      }
+     ]
+    }
+   ],
+   "build": [
+    "h fly-left 400",
+    "r1 fly-bottom 400",
+    "c1 fly-bottom 400 with",
+    "r2 fly-bottom 400",
+    "c2 fly-bottom 400 with",
+    "r3 fly-bottom 400",
+    "c3 fly-bottom 400 with"
+   ],
+   "bg": "bg"
+  },
+  {
+   "recipe": "closing",
+   "transition": "push",
+   "items": [
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      0.2,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      0.2,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "image": "reg-mark.png",
+     "at": [
+      9.35,
+      4.975,
+      0.45
+     ]
+    },
+    {
+     "id": "a",
+     "text": "pri",
+     "as": "title",
+     "size": 290,
+     "at": [
+      -0.5,
+      0.35,
+      5.9,
+      3.7
+     ]
+    },
+    {
+     "id": "z",
+     "text": "nt",
+     "as": "title",
+     "size": 290,
+     "color": "accent2",
+     "at": [
+      5.31,
+      0.35,
+      4.6,
+      3.7
+     ]
+    },
+    {
+     "id": "k",
+     "text": "thursdays · studio b · bring paper if you like",
+     "as": "label",
+     "at": [
+      0.75,
+      4.98,
+      8.5,
+      0.3
+     ]
+    }
+   ],
+   "build": [
+    "a fly-left 450",
+    "z fly-right 450 with",
+    "k fade 300"
+   ],
+   "bg": "bg"
+  }
+ ]
+}

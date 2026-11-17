@@ -26,6 +26,12 @@ It writes a `.pptx` with native builds, transitions and looping GIFs. Google Dri
 
 More in [examples/prompts.md](skills/motion-slides/examples/prompts.md).
 
+## Gallery
+
+![Eight native Google Slides with builds, transitions and rendered loops](gallery/previews/reel.gif)
+
+[Motion gallery](gallery/README.md): six example prompts, each with a motion preview and the resulting native Google Slides deck.
+
 ## Research
 
 - [Google Slides + Motion: Discovery Report](docs/research/2026-11-17-google-slides-motion-discovery.md)
