@@ -2,54 +2,91 @@
 spec: slide-style/v1
 name: Kinetic poster
 slug: kinetic-poster
-source: { kind: video, ref: "bangtutorial/bang-motion kinetic colorblock + owner pick #8" }
-use_for: [poster, title, section, big-number]
-avoid_for: [explanations, quotes longer than 8 words]
-canvas: { width_in: 10, height_in: 5.625, margin_in: 0.3 }
+summary: Loud, flat, fast. Rotated yellow, pink, blue and black blocks, heavy condensed caps, one hollow word. Everything slams in.
+source:
+  kind: video
+  ref: Owner pick #8 from the discovery report (kinetic color-block motion graphics)
+  took: palette, condensed caps, rotated blocks, outline type, build tempo
+use_for: [openers, bold claims, section breaks, hackathons, launches]
+avoid_for: [explanations, quotes over 8 words, dense data]
+
+canvas: {width_in: 10, height_in: 5.625, margin_in: 0.3}
+
 palette:
-  bg: "#FFD23F"       # signal yellow
-  ink: "#141414"      # black
-  accent: "#FF3D7F"   # hot pink
-  accent2: "#2B3BFF"  # ultramarine
-  surface: "#FFFFFF"
+  bg: "#FFD23F"        # signal yellow
+  ink: "#141414"       # black
+  accent: "#FF3D7F"    # hot pink
+  accent2: "#2B3BFF"   # ultramarine
+  surface: "#FFFFFF"   # white, for outline type and tags
   muted: "#141414"
+
 type:
-  display: { family: Anton, weight: 400, italic: false, case: upper, tracking_em: 0, size_pt: 104 }
-  body: { family: Instrument Sans, weight: 700, italic: false, case: upper, tracking_em: 0, size_pt: 11 }
-  label: { family: Instrument Sans, weight: 700, italic: false, case: upper, tracking_em: 0, size_pt: 9 }
+  display:  {family: Anton, weight: 400, case: upper, size_pt: [44, 150], line: 0.82, color: ink}
+  body:     {family: Instrument Sans, weight: 700, case: as-is, size_pt: [11, 12], line: 1.1, color: ink}
+  label:    {family: Instrument Sans, weight: 700, case: upper, size_pt: [9, 11], color: ink}
+  number:   {family: Anton, weight: 400, size_pt: [180, 210], line: 0.85, color: ink}
+
 layout:
-  density: sparse
-  max_words: 8
-  align: free
-  archetypes: [poster, big-number, section]
-  ornaments: [rotated blocks (-6..6 deg), one outline word, a star, a marquee band]
+  density: low
+  align: mixed
+  archetypes: [poster, big-number, section, title]
+  ornaments:
+    - {name: rotated color blocks, make: native}
+    - {name: outline word, make: png}
+    - {name: star, make: native}
+    - {name: marquee band, make: loop}
+
 motion:
-  energy: loud
-  transition: { kind: push, speed: med }
-  builds: { kinds: [fly-top, fly-left, fly-right, zoom, spin, fade], order: big-to-small, duration_ms: 420, stagger_ms: 0, mode: after }
+  energy: high
+  transition: {kind: push, speed: med}
+  builds:
+    fx: [fly-top, fly-left, fly-right, zoom, spin, fade]
+    duration_ms: [400, 450]
+    trigger: after
+    order: biggest word, then blocks from three sides, then small text, then the star spins
   loops:
-    - { name: marquee, what: "heavy caps slide sideways in a band", seconds: 8, fps: 12, size_px: 1280, colors: [ink, bg], placement: "full width band, rotated -3 deg, low on the slide" }
+    - {name: marquee, what: Heavy caps slide sideways in a band, seconds: 8, fps: 12, size_px: [1280, 128], colors: [ink, bg], placement: full-width band low on the slide, rotated -3 deg}
+
 rules:
   do:
     - Let type bleed off the page edge. Cropped letters read as energy.
     - Rotate every block a few degrees, alternating direction.
-    - Build big to small, fast (400-450 ms), finish with a spin.
+    - Build big to small, fast, and finish with a spin.
   dont:
     - No more than 3 block colors on one slide.
-    - No body paragraphs. No sentence case.
+    - No paragraphs. No sentence case in display type.
     - No gradients, glows or soft shadows.
     - No italics. Anton has none, so Slides fakes a slant. Switch the color to accent instead.
 ---
 
 # Kinetic poster
 
-Loud, flat, fast. Rotated color blocks, heavy condensed caps, one hollow word. Every object slams in.
-
-## Signature moves
+## Signature
 
 - One word at 150 pt bleeding off the top edge.
 - Blocks fly in from three sides, then a star spins.
-- Outline text rendered as PNG (Slides has no text stroke), white on the blue block.
+- One hollow (outline) word in white on the blue block. Rendered as PNG, since Slides has no text stroke.
+
+## Slide recipes
+
+From [reference/recipes.md](../../reference/recipes.md):
+
+- `poster`: the core layout, as written. 8 words.
+- `big-number`, `section`: Anton numerals. Use the accent color, not italic, for the turn.
+- `title`: works, with tighter line spacing (0.82).
+- Avoid `photo-split` and `quote` beyond 8 words.
+
+## Motion
+
+Fast. Push transition. Builds of 400 to 450 ms, all `after`, nine steps max, then a 900 ms star spin. Optional marquee band loop in black with yellow caps.
+
+## Do / Don't
+
+See `rules` above.
+
+## Example prompt
+
+> Make a 3-slide kinetic poster opener for a hackathon: "BUILD WEIRD THINGS", Nov 21-23, prizes.
 
 ## Deck theme
 

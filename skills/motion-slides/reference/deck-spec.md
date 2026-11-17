@@ -55,7 +55,7 @@ Recipes expect these names. Every built-in style defines all of them.
 | Key | Meaning |
 |---|---|
 | `bg` | Color name or hex, or `{"image": "file.png"}` for a full-bleed picture. Default `bg` |
-| `transition` | `fade` · `push` · `flip` · `gallery` · `none`, or `{"type": "fade", "speed": "slow"}` (`slow`, `med`, `fast`) |
+| `transition` | `fade` · `push` · `flip` · `gallery` · `dissolve` (imports as fade through black) · `none`, or `{"type": "fade", "speed": "slow"}` (`slow`, `med`, `fast`) |
 | `items` | Objects, back to front |
 | `build` | Animation sequence (below) |
 | `notes` | Speaker notes |
@@ -96,6 +96,7 @@ A list of strings `"id effect [ms] [mode]"` (or lists with the same parts), in p
 | `fly-left` · `fly-right` · `fly-top` · `fly-bottom` | Enter from that side (`rise` = `fly-bottom`, `drop` = `fly-top`) | 600 |
 | `zoom` | Grow in from the center | 450 |
 | `spin` | One full turn (emphasis; object stays visible) | 900 |
+| `appear` | Cut in, no animation (not yet verified through import) | 1 |
 
 | Mode | Meaning |
 |---|---|
@@ -103,7 +104,7 @@ A list of strings `"id effect [ms] [mode]"` (or lists with the same parts), in p
 | `with` | Starts with the previous step |
 | `click` | Waits for a click, then starts a new group |
 
-The first group starts by itself when the slide opens. All of these survive Drive's conversion (tested).
+The first group starts by itself when the slide opens. Fade, fly, zoom and spin survive Drive's conversion (tested twice).
 Not available in Google Slides: morph, motion paths, wipe (becomes fade), emphasis other than spin, delays.
 
 ## Checks the builder runs

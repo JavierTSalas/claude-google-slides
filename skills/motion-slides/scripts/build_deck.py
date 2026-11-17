@@ -328,6 +328,8 @@ def add_transition(slide, spec):
         xml = f'<p:transition xmlns:p="{NS_P}" spd="{speed}"><p:fade/></p:transition>'
     elif kind == "push":
         xml = f'<p:transition xmlns:p="{NS_P}" spd="{speed}"><p:push dir="l"/></p:transition>'
+    elif kind == "dissolve":  # Slides imports this as a fade through black
+        xml = f'<p:transition xmlns:p="{NS_P}" spd="{speed}"><p:dissolve/></p:transition>'
     elif kind in ("flip", "gallery"):
         inner = {"flip": '<p14:flip dir="r"/>', "gallery": '<p14:gallery dir="l"/>'}[kind]
         xml = (f'<mc:AlternateContent xmlns:mc="{NS_MC}"><mc:Choice xmlns:p14="{NS_P14}" Requires="p14">'
@@ -335,7 +337,7 @@ def add_transition(slide, spec):
                f'<mc:Fallback><p:transition xmlns:p="{NS_P}" spd="{speed}"><p:fade/></p:transition></mc:Fallback>'
                f'</mc:AlternateContent>')
     else:
-        die(f"transition '{kind}' not supported. Use fade | push | flip | gallery | none")
+        die(f"transition '{kind}' not supported. Use fade | push | flip | gallery | dissolve | none")
     sld = slide._element
     anchor = sld.find(qn("p:clrMapOvr"))
     if anchor is None:
@@ -344,7 +346,7 @@ def add_transition(slide, spec):
 
 
 # ---------------------------------------------------------------- builds (OOXML timing)
-FX_DEFAULT_MS = {"fade": 600, "fly": 600, "zoom": 450, "spin": 900}
+FX_DEFAULT_MS = {"fade": 600, "fly": 600, "zoom": 450, "spin": 900, "appear": 1}
 FX_ALIAS = {"rise": "fly-bottom", "drop": "fly-top", "fly-up": "fly-bottom", "fly-down": "fly-top"}
 FLY = {"left": (8, "ppt_x", "0-#ppt_w/2", "#ppt_x"), "right": (2, "ppt_x", "1+#ppt_w/2", "#ppt_x"),
        "top": (1, "ppt_y", "0-#ppt_h/2", "#ppt_y"), "bottom": (4, "ppt_y", "1+#ppt_h/2", "#ppt_y")}
@@ -355,8 +357,8 @@ def parse_build(entry, where):
     if len(parts) < 2:
         die(f"{where}: build '{entry}' needs at least 'id effect'")
     sid, fx = parts[0], FX_ALIAS.get(parts[1], parts[1])
-    if fx not in ("fade", "zoom", "spin") and not (fx.startswith("fly-") and fx[4:] in FLY):
-        die(f"{where}: effect '{parts[1]}' not supported. Use fade | fly-left|right|top|bottom | zoom | spin")
+    if fx not in ("fade", "zoom", "spin", "appear") and not (fx.startswith("fly-") and fx[4:] in FLY):
+        die(f"{where}: effect '{parts[1]}' not supported. Use fade | fly-left|right|top|bottom | zoom | spin | appear")
     ms, mode = FX_DEFAULT_MS[fx.split("-")[0]], "after"
     for p in parts[2:]:
         if p.isdigit():
@@ -392,6 +394,9 @@ def _effect(ids, spid, fx, node, dur):
         sub, attr, frm, to = FLY[fx[4:]]
         beh = _vis(next(ids), spid) + _anim(next(ids), spid, attr, frm, to, dur)
         pid, cls = 2, "entr"
+    elif fx == "appear":
+        beh = _vis(next(ids), spid)
+        pid, cls, sub = 1, "entr", 0
     elif fx == "zoom":
         beh = (_vis(next(ids), spid) + _anim(next(ids), spid, "ppt_w", "0", "#ppt_w", dur)
                + _anim(next(ids), spid, "ppt_h", "0", "#ppt_h", dur))
