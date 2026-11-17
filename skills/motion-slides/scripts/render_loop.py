@@ -12,8 +12,9 @@ Pipeline (sizes from docs/research/gif-compression.md):
   HyperFrames -> lossless PNG frames -> ffmpeg palettegen(stats_mode=full) + paletteuse(no dither,
   diff_mode=rectangle) -> gifsicle -O3 --lossy=30 (if available).
 
-Needs: Node (latest LTS) with npx, and ffmpeg. HyperFrames and gifsicle come through npx at their latest
-versions (set HYPERFRAMES or GIFSICLE_NPM to pin). Fonts download from Google Fonts.
+Needs: Node 22+ with npx, and ffmpeg. HyperFrames, gifsicle and GSAP run at the known-good versions in PINS.
+If a pin cannot be fetched (offline, locked-down registry), the script falls back to whatever version is
+installed or cached, and says so. Fonts download from Google Fonts.
 """
 import argparse
 import html
@@ -29,40 +30,77 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gfonts  # noqa: E402
 
-HYPERFRAMES = os.environ.get("HYPERFRAMES", "hyperframes@latest")  # set HYPERFRAMES=hyperframes@<version> to pin
-GIFSICLE_NPM = os.environ.get("GIFSICLE_NPM", "gifsicle@latest")
+# Known-good set, tested together (Nov 2026). Override with env vars. Fallbacks keep the script working
+# when a pin is unavailable; the output then may differ slightly from the tested set.
+PINS = {
+    "hyperframes": os.environ.get("HYPERFRAMES_VERSION", "0.9.59"),
+    "gifsicle": os.environ.get("GIFSICLE_VERSION", "7.0.1"),  # npm wrapper around gifsicle 1.92
+    "gsap": os.environ.get("GSAP_VERSION", "3.15.1"),
+}
 GSAP_CDN = re.compile(r'https://cdn\.jsdelivr\.net/npm/gsap(?:@([^/"\']+))?/dist/gsap\.min\.js')
 CACHE = Path(os.environ.get("MOTION_SLIDES_CACHE", Path.home() / ".cache" / "motion-slides"))
 
 
-def local_gsap(spec):
-    """Fetch gsap.min.js from the npm registry once (the render browser may not reach CDNs).
+def resolve_tool(pkg, bin_name=None):
+    """Command for an npm CLI: pinned via npx, else on PATH, else any version npx can find. None if none run."""
+    bin_name = bin_name or pkg
+    pin = PINS[pkg]
 
-    spec is the CDN version: an exact x.y.z is used as is; anything else ('3', 'latest') takes
-    the latest release. Cached for 7 days.
-    """
+    def npx(spec):
+        return ["npx", "-y", spec] if bin_name == pkg else ["npx", "-y", "-p", spec, bin_name]
+
+    tries = [(npx(f"{pkg}@{pin}"), f"{pkg} {pin} (pinned)")]
+    if shutil.which(bin_name):
+        tries.append(([shutil.which(bin_name)], f"{bin_name} from PATH"))
+    tries.append((npx(pkg), f"{pkg} (whatever npx has)"))
+    for cmd, label in tries:
+        try:
+            r = subprocess.run([*cmd, "--version"], capture_output=True, text=True, timeout=300)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if r.returncode == 0:
+            ver = (r.stdout.strip().splitlines() or ["?"])[0]
+            if "(pinned)" not in label:
+                print(f"note: {pkg}@{pin} unavailable; using {label}: {ver}")
+            return cmd
+    return None
+
+
+def local_gsap(spec):
+    """gsap.min.js for the render (its browser may not reach CDNs). Pinned version first, then fallbacks."""
     import io
     import json as _json
     import tarfile
-    import time
     import urllib.request
 
-    exact = spec if spec and re.fullmatch(r"\d+\.\d+\.\d+", spec) else None
-    out = CACHE / f"gsap-{exact or 'latest'}.min.js"
-    fresh = out.exists() and (exact or time.time() - out.stat().st_mtime < 7 * 86400)
-    if not fresh:
-        CACHE.mkdir(parents=True, exist_ok=True)
-        ver = exact
-        if not ver:
-            with urllib.request.urlopen("https://registry.npmjs.org/gsap/latest", timeout=60) as r:
-                ver = _json.load(r)["version"]
-            if spec and spec.split(".")[0].isdigit() and ver.split(".")[0] != spec.split(".")[0]:
-                print(f"note: template asks for gsap@{spec}; using latest {ver}")
+    want = spec if spec and re.fullmatch(r"\d+\.\d+\.\d+", spec) else PINS["gsap"]
+    out = CACHE / f"gsap-{want}.min.js"
+    if out.exists():
+        return out
+
+    def fetch(ver, dest):
         url = f"https://registry.npmjs.org/gsap/-/gsap-{ver}.tgz"
         with urllib.request.urlopen(url, timeout=60) as r:
             tgz = tarfile.open(fileobj=io.BytesIO(r.read()), mode="r:gz")
-        out.write_bytes(tgz.extractfile("package/dist/gsap.min.js").read())
-    return out
+        dest.write_bytes(tgz.extractfile("package/dist/gsap.min.js").read())
+        return dest
+
+    CACHE.mkdir(parents=True, exist_ok=True)
+    try:
+        return fetch(want, out)
+    except Exception:
+        pass
+    cached = sorted(CACHE.glob("gsap-*.min.js"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if cached:
+        print(f"note: gsap {want} unavailable; using cached {cached[0].name}")
+        return cached[0]
+    try:
+        with urllib.request.urlopen("https://registry.npmjs.org/gsap/latest", timeout=60) as r:
+            ver = _json.load(r)["version"]
+        print(f"note: gsap {want} unavailable; using {ver}")
+        return fetch(ver, CACHE / f"gsap-{ver}.min.js")
+    except Exception:
+        return None
 
 
 def die(msg):
@@ -101,7 +139,7 @@ def main():
         a.width = min(a.width or 400, 400)
     for tool in ("npx", "ffmpeg"):
         if not shutil.which(tool):
-            die(f"'{tool}' not found. Install the latest Node LTS and ffmpeg, or skip motion (native builds still work)")
+            die(f"'{tool}' not found. Install Node 22+ and ffmpeg (any recent version), or skip motion (native builds still work)")
 
     tpl = Path(a.template).resolve()
     src = tpl.read_text()
@@ -139,12 +177,21 @@ def main():
         page = src.replace("</head>", f"<style>\n{css}\n</style>\n</head>", 1) if css else src
         m = GSAP_CDN.search(page)
         if m:
-            shutil.copy(local_gsap(m.group(1)), work / "gsap.min.js")
-            page = GSAP_CDN.sub("gsap.min.js", page)
+            js = local_gsap(m.group(1))
+            if js:
+                shutil.copy(js, work / "gsap.min.js")
+                page = GSAP_CDN.sub("gsap.min.js", page)
+            else:
+                print("note: no local GSAP (registry unreachable, nothing cached); the render will try the CDN. "
+                      f"To fix offline, save gsap.min.js as {CACHE}/gsap-{PINS['gsap']}.min.js")
         (work / "index.html").write_text(page)
 
         frames = work / "frames"
-        cmd = ["npx", "-y", HYPERFRAMES, "render", str(work), "--format", "png-sequence", "-o", str(frames),
+        hf = resolve_tool("hyperframes")
+        if not hf:
+            die("HyperFrames is unavailable: npx could not fetch it and it is not on PATH. "
+                "Check network access to the npm registry, or install it: npm i -g hyperframes")
+        cmd = [*hf, "render", str(work), "--format", "png-sequence", "-o", str(frames),
                "--fps", str(a.fps), "--variables", json.dumps(vals), "--quiet"]
         print("render:", tpl.name, json.dumps(vals))
         r = subprocess.run(cmd, capture_output=True, text=True)
@@ -169,14 +216,14 @@ def main():
 
         out = Path(a.out)
         out.parent.mkdir(parents=True, exist_ok=True)
-        gifsicle = [shutil.which("gifsicle")] if shutil.which("gifsicle") else ["npx", "-y", "-p", GIFSICLE_NPM, "gifsicle"]
-        ok = a.lossy and subprocess.run([*gifsicle, "--version"], capture_output=True).returncode == 0
+        gifsicle = resolve_tool("gifsicle") if a.lossy else None
+        ok = bool(gifsicle)
         if ok:
             subprocess.run([*gifsicle, "-O3", f"--lossy={a.lossy}", str(raw), "-o", str(out)], check=True)
         else:
             shutil.copy(raw, out)
             if a.lossy:
-                print("note: gifsicle unavailable; GIF is about 2x larger. Install the latest gifsicle to halve it")
+                print("note: gifsicle unavailable; GIF is about 2x larger. Install gifsicle (any version) to halve it")
 
         from PIL import Image  # bundled with python-pptx
 

@@ -42,7 +42,7 @@ Copy the closest template. Keep these rules:
    Build `gsap.timeline({ paused: true })` and register it on `window.__timelines["main"]`.
 4. Seamless loop: the last frame must lead into the first. Rotate by whole turns. Translate by exactly one pattern period.
    Sway as 0 → +a → 0 → −a → 0 with sine eases. Use `ease: "none"` for constant motion.
-5. Load GSAP from `https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js`. The render script swaps in a local copy of the latest release.
+5. Load GSAP from `https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/gsap.min.js` (the pinned version). The render script swaps in a local copy, falling back to any cached or available version.
 6. Flat color beats gradients: GIFs have 256 colors and gradients band. Soft light is fine at `--photo` settings.
 7. Taste: one motion idea per loop, slow and constant. No bounce, no glow, no particles.
 
