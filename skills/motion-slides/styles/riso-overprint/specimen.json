@@ -22,19 +22,19 @@
   "type": {
    "title": {
     "font": "display",
-    "size": 150,
+    "size": 120,
     "color": "accent",
     "spacing": 0.82
    },
    "hero": {
     "font": "display",
-    "size": 72,
+    "size": 38,
     "color": "accent2",
     "spacing": 0.85
    },
    "headline": {
     "font": "display",
-    "size": 44,
+    "size": 32,
     "color": "accent2",
     "spacing": 0.9
    },
@@ -57,7 +57,7 @@
    },
    "step": {
     "font": "display",
-    "size": 24,
+    "size": 18,
     "color": "ink",
     "spacing": 0.95
    },
@@ -406,7 +406,8 @@
       0.7,
       8.5,
       0.8
-     ]
+     ],
+     "size": 44
     },
     {
      "id": "r1",
@@ -436,7 +437,8 @@
       },
       {
        "text": "sketch",
-       "as": "step"
+       "as": "step",
+       "size": 24
       },
       {
        "text": "One idea, two colors. Pencil is fine.",
@@ -471,7 +473,8 @@
       },
       {
        "text": "separate",
-       "as": "step"
+       "as": "step",
+       "size": 24
       },
       {
        "text": "Split it into a pink layer and a blue layer.",
@@ -507,7 +510,8 @@
       },
       {
        "text": "print",
-       "as": "step"
+       "as": "step",
+       "size": 24
       },
       {
        "text": "Run both through the drum. Watch them meet.",

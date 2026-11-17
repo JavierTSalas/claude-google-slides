@@ -112,6 +112,7 @@ The last section of the body. `deck.json` and `scripts/style_tour.py` read it as
 
 - `colors` = `palette`, same role names.
 - `fonts` = type role → `family`. At least `display`, `body`, `label`.
+- Size presets so the shared recipes fit: run `scripts/style_tour.py <slug> OUT --no-motion` until it has no fit warnings. Wide display fonts (Archivo Black, Dela Gothic One) need presets about 0.7× those of a serif. Put bigger sizes on the style's own recipes as explicit `size` values.
 - `type` = named presets. Define all nine, because the shared recipes use them: `title`, `hero`, `headline`, `number`, `quote`, `kicker`, `step`, `body`, `label`. Each is `{font, size, color, italic, bold, spacing}`. `font` and `color` name a role. `bold` = weight >= 600.
 
 ```json
@@ -119,13 +120,13 @@ The last section of the body. `deck.json` and `scripts/style_tour.py` read it as
   "colors": { "bg": "#F0EADE", "ink": "#00207A", "accent": "#EE3D98", "accent2": "#006EA7" },
   "fonts":  { "display": "Archivo Black", "body": "Archivo", "label": "Space Mono" },
   "type": {
-    "title":    { "font": "display", "size": 150, "color": "accent", "spacing": 0.82 },
-    "hero":     { "font": "display", "size": 72, "color": "accent2", "spacing": 0.85 },
-    "headline": { "font": "display", "size": 40, "color": "accent2", "spacing": 0.9 },
+    "title":    { "font": "display", "size": 120, "color": "accent", "spacing": 0.82 },
+    "hero":     { "font": "display", "size": 38, "color": "accent2", "spacing": 0.85 },
+    "headline": { "font": "display", "size": 32, "color": "accent2", "spacing": 0.9 },
     "number":   { "font": "display", "color": "accent", "spacing": 0.8 },
     "quote":    { "font": "display", "size": 34, "color": "ink", "spacing": 0.95 },
     "kicker":   { "font": "label", "size": 11, "bold": true, "color": "accent" },
-    "step":     { "font": "display", "size": 22, "color": "ink" },
+    "step":     { "font": "display", "size": 18, "color": "ink" },
     "body":     { "font": "body", "size": 14, "color": "ink", "spacing": 1.2 },
     "label":    { "font": "label", "size": 10, "bold": true, "color": "accent2" }
   }

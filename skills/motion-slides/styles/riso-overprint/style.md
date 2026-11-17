@@ -111,13 +111,13 @@ Paste into `deck.json` → `"theme"`.
               "muted": "#006EA7", "surface": "#F0BFCC", "paper": "#FFFFFF" },
   "fonts": { "display": "Archivo Black", "body": "Archivo", "label": "Space Mono" },
   "type": {
-    "title":    { "font": "display", "size": 150, "color": "accent", "spacing": 0.82 },
-    "hero":     { "font": "display", "size": 72, "color": "accent2", "spacing": 0.85 },
-    "headline": { "font": "display", "size": 44, "color": "accent2", "spacing": 0.9 },
+    "title":    { "font": "display", "size": 120, "color": "accent", "spacing": 0.82 },
+    "hero":     { "font": "display", "size": 38, "color": "accent2", "spacing": 0.85 },
+    "headline": { "font": "display", "size": 32, "color": "accent2", "spacing": 0.9 },
     "number":   { "font": "display", "color": "accent", "spacing": 0.8 },
     "quote":    { "font": "display", "size": 34, "color": "ink", "spacing": 0.95 },
     "kicker":   { "font": "label", "size": 11, "bold": true, "color": "accent" },
-    "step":     { "font": "display", "size": 24, "color": "ink", "spacing": 0.95 },
+    "step":     { "font": "display", "size": 18, "color": "ink", "spacing": 0.95 },
     "body":     { "font": "body", "size": 14, "color": "ink", "spacing": 1.2 },
     "label":    { "font": "label", "size": 10, "bold": true, "color": "accent2" }
   }
